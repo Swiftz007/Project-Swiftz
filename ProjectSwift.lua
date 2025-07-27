@@ -72,10 +72,10 @@ task.spawn(function()
         if autoBuyGear then
             for _, gear in ipairs(selectedGears) do
                 BuyItem(GearRemote, gear)
-                task.wait(0.001)
+                task.wait(0.0001)
             end
         end
-        task.wait(0.001)
+        task.wait(0.0001)
     end
 end)
 
@@ -85,10 +85,10 @@ task.spawn(function()
         if autoBuySeed then
             for _, seed in ipairs(selectedSeeds) do
                 BuyItem(SeedRemote, seed)
-                task.wait(0.001)
+                task.wait(0.0001)
             end
         end
-        task.wait(0.001)
+        task.wait(0.0001)
     end
 end)
 
@@ -98,10 +98,10 @@ task.spawn(function()
         if autoBuyEgg then
             for _, egg in ipairs(selectedEggs) do
                 BuyItem(EggRemote, egg)
-                task.wait(0.001)
+                task.wait(0.0001)
             end
         end
-        task.wait(0.001)
+        task.wait(0.0001)
     end
 end)
 
