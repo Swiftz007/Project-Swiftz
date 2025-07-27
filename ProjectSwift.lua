@@ -12,7 +12,7 @@ local Window = Rayfield:CreateWindow({
 
 local Tab = Window:CreateTab("Auto Buy", 4483362458)
 
--- รายชื่อ Gear
+-- Raw Lists
 local gearListRaw = {
     "Watering Can", "Trowel", "Recall Wrench",
     "Basic Sprinkler", "Advanced Sprinkler", "Godly Sprinkler", "Master Sprinkler",
@@ -21,7 +21,6 @@ local gearListRaw = {
     "Friendship Pot", "Levelup Lollipop"
 }
 
--- รายชื่อ Seed
 local seedListRaw = {
     "Carrot", "Strawberry", "Blueberry", "Orange Tulip", "Tomato",
     "Corn", "Daffodil", "Watermelon", "Pumpkin", "Apple",
@@ -30,13 +29,12 @@ local seedListRaw = {
     "Ember Lily", "Sugar Apple", "Burning Bud", "Giant Pinecone", "Elder Strawberry"
 }
 
--- รายชื่อ Egg
 local eggListRaw = {
-    "Common", "Common Summer", "Rare Summer",
-    "Mythical", "Paradise", "Bug"
+    "Common Egg", "Common Summer Egg", "Rare Summer Egg",
+    "Mythical Egg", "Paradise Egg", "Bug Egg"
 }
 
--- เพิ่ม "All" เข้าไป
+-- Add "All"
 local function withAllOption(list)
     local newList = { "All" }
     for _, v in ipairs(list) do
@@ -107,9 +105,9 @@ task.spawn(function()
     end
 end)
 
--- === UI ===
+-- UI
 
--- Section: Seed
+-- Seed Section
 Tab:CreateDropdown({
     Name = "Select Seed",
     Options = seedList,
@@ -128,7 +126,7 @@ Tab:CreateToggle({
     end
 })
 
--- Section: Gear
+-- Gear Section
 Tab:CreateDropdown({
     Name = "Select Gear",
     Options = gearList,
@@ -147,7 +145,7 @@ Tab:CreateToggle({
     end
 })
 
--- Section: Egg
+-- Egg Section
 Tab:CreateDropdown({
     Name = "Select Egg",
     Options = eggList,
