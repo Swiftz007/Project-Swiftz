@@ -76,10 +76,10 @@ task.spawn(function()
         if autoBuySeed then
             for _, seed in ipairs(selectedSeeds) do
                 BuyItem(SeedRemote, seed)
-                task.wait(0.05)
+                task.wait(0.01)
             end
         end
-        task.wait(0.05)
+        task.wait(0.01)
     end
 end)
 
