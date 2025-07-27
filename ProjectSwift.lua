@@ -3,8 +3,8 @@ local Rayfield = loadstring(game:HttpGet("https://sirius.menu/rayfield", true))(
 
 -- UI Window
 local Window = Rayfield:CreateWindow({
-    Name = "Swiftz Hub - Auto Buyer",
-    LoadingTitle = "Loading Auto Buyer...",
+    Name = "Project Swiftz",
+    LoadingTitle = "Swiftz Loading...",
     ConfigurationSaving = {
         Enabled = false
     }
@@ -63,10 +63,10 @@ task.spawn(function()
         if autoBuyGear then
             for _, gear in ipairs(selectedGears) do
                 BuyItem(GearRemote, gear)
-                task.wait(0.1)
+                task.wait(0.05)
             end
         end
-        task.wait(0.1)
+        task.wait(0.05)
     end
 end)
 
@@ -76,10 +76,10 @@ task.spawn(function()
         if autoBuySeed then
             for _, seed in ipairs(selectedSeeds) do
                 BuyItem(SeedRemote, seed)
-                task.wait(0.1)
+                task.wait(0.05)
             end
         end
-        task.wait(0.1)
+        task.wait(0.05)
     end
 end)
 
