@@ -12,7 +12,7 @@ local Window = Rayfield:CreateWindow({
 
 local Tab = Window:CreateTab("Auto Buy", 4483362458)
 
--- List Gears
+-- รายชื่อ Gear
 local gearListRaw = {
     "Watering Can", "Trowel", "Recall Wrench",
     "Basic Sprinkler", "Advanced Sprinkler", "Godly Sprinkler", "Master Sprinkler",
@@ -21,7 +21,7 @@ local gearListRaw = {
     "Friendship Pot", "Levelup Lollipop"
 }
 
--- List Seeds
+-- รายชื่อ Seed
 local seedListRaw = {
     "Carrot", "Strawberry", "Blueberry", "Orange Tulip", "Tomato",
     "Corn", "Daffodil", "Watermelon", "Pumpkin", "Apple",
@@ -30,23 +30,34 @@ local seedListRaw = {
     "Ember Lily", "Sugar Apple", "Burning Bud", "Giant Pinecone", "Elder Strawberry"
 }
 
--- เพิ่ม "All" เข้าไปใน Dropdown
-local gearList = { "All" }
-for _, v in ipairs(gearListRaw) do table.insert(gearList, v) end
+-- รายชื่อ Egg
+local eggListRaw = {
+    "Common", "Common Summer", "Rare Summer",
+    "Mythical", "Paradise", "Bug"
+}
 
-local seedList = { "All" }
-for _, v in ipairs(seedListRaw) do table.insert(seedList, v) end
+-- เพิ่ม "All" เข้าไป
+local function withAllOption(list)
+    local newList = { "All" }
+    for _, v in ipairs(list) do
+        table.insert(newList, v)
+    end
+    return newList
+end
 
--- Remote references
+local gearList = withAllOption(gearListRaw)
+local seedList = withAllOption(seedListRaw)
+local eggList = withAllOption(eggListRaw)
+
+-- Remote
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local GearRemote = ReplicatedStorage:WaitForChild("GameEvents"):FindFirstChild("BuyGearStock")
 local SeedRemote = ReplicatedStorage:WaitForChild("GameEvents"):FindFirstChild("BuySeedStock")
+local EggRemote = ReplicatedStorage:WaitForChild("GameEvents"):FindFirstChild("BuyPetEgg")
 
 -- State
-local selectedGears = {}
-local selectedSeeds = {}
-local autoBuyGear = false
-local autoBuySeed = false
+local selectedGears, selectedSeeds, selectedEggs = {}, {}, {}
+local autoBuyGear, autoBuySeed, autoBuyEgg = false, false, false
 
 -- Buy Function
 local function BuyItem(remote, itemName)
@@ -63,10 +74,10 @@ task.spawn(function()
         if autoBuyGear then
             for _, gear in ipairs(selectedGears) do
                 BuyItem(GearRemote, gear)
-                task.wait(0.05)
+                task.wait(0.01)
             end
         end
-        task.wait(0.05)
+        task.wait(0.01)
     end
 end)
 
@@ -83,50 +94,74 @@ task.spawn(function()
     end
 end)
 
--- Dropdown Gear
-Tab:CreateDropdown({
-    Name = "Select Gear",
-    Options = gearList,
-    MultiSelection = true,
-    CurrentOption = {},
-    Callback = function(option)
-        if table.find(option, "All") then
-            selectedGears = gearListRaw
-        else
-            selectedGears = option
+-- Loop Egg
+task.spawn(function()
+    while true do
+        if autoBuyEgg then
+            for _, egg in ipairs(selectedEggs) do
+                BuyItem(EggRemote, egg)
+                task.wait(0.01)
+            end
         end
+        task.wait(0.01)
     end
-})
+end)
 
--- Toggle Auto Buy Gear
-Tab:CreateToggle({
-    Name = "Auto Buy Gear",
-    CurrentValue = false,
-    Callback = function(state)
-        autoBuyGear = state
-    end
-})
+-- === UI ===
 
--- Dropdown Seed
+-- Section: Seed
 Tab:CreateDropdown({
     Name = "Select Seed",
     Options = seedList,
     MultiSelection = true,
     CurrentOption = {},
     Callback = function(option)
-        if table.find(option, "All") then
-            selectedSeeds = seedListRaw
-        else
-            selectedSeeds = option
-        end
+        selectedSeeds = table.find(option, "All") and seedListRaw or option
     end
 })
 
--- Toggle Auto Buy Seed
 Tab:CreateToggle({
     Name = "Auto Buy Seed",
     CurrentValue = false,
-    Callback = function(state)
-        autoBuySeed = state
+    Callback = function(value)
+        autoBuySeed = value
+    end
+})
+
+-- Section: Gear
+Tab:CreateDropdown({
+    Name = "Select Gear",
+    Options = gearList,
+    MultiSelection = true,
+    CurrentOption = {},
+    Callback = function(option)
+        selectedGears = table.find(option, "All") and gearListRaw or option
+    end
+})
+
+Tab:CreateToggle({
+    Name = "Auto Buy Gear",
+    CurrentValue = false,
+    Callback = function(value)
+        autoBuyGear = value
+    end
+})
+
+-- Section: Egg
+Tab:CreateDropdown({
+    Name = "Select Egg",
+    Options = eggList,
+    MultiSelection = true,
+    CurrentOption = {},
+    Callback = function(option)
+        selectedEggs = table.find(option, "All") and eggListRaw or option
+    end
+})
+
+Tab:CreateToggle({
+    Name = "Auto Buy Egg",
+    CurrentValue = false,
+    Callback = function(value)
+        autoBuyEgg = value
     end
 })
