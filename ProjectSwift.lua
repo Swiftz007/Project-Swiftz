@@ -1,3 +1,18 @@
+-- 🔒 ตรวจสอบชื่อแมพก่อนโหลด UI
+local Players = game:GetService("Players")
+local MarketplaceService = game:GetService("MarketplaceService")
+
+local expectedMapName = "Grow a Garden"
+
+local success, productInfo = pcall(function()
+    return MarketplaceService:GetProductInfo(game.PlaceId)
+end)
+
+if not success or not productInfo or not productInfo.Name:lower():match(expectedMapName:lower()) then
+    Players.LocalPlayer:Kick("Project Swiftz : Not support this map\nDiscord : https://discord.gg/mqWbztWd")
+    return
+end
+
 -- โหลด Rayfield UI
 local Rayfield = loadstring(game:HttpGet("https://sirius.menu/rayfield", true))()
 
