@@ -25,11 +25,7 @@ local Window = Rayfield:CreateWindow({
     }
 })
 
-local MainTab = Window:CreateTab("🌿 Main", 4483362458)
-local SeedTab = Window:CreateTab("🌱 Seed Shop", 4483362458)
-local GearTab = Window:CreateTab("🧰 Gear Shop", 4483362458)
-local EggTab = Window:CreateTab("🐣 Pet Shop", 4483362458)
-local Tab = Window:CreateTab("Auto Buy", 4483362458)
+local Tab = Window:CreateTab("🌿 Main", 4483362458)
 
 -- Raw Lists
 local gearListRaw = {
