@@ -90,7 +90,6 @@ task.spawn(function()
     while true do
         if autoBuySeed then
             for _, seed in ipairs(selectedSeeds) do
-                for _ = 1, 50 do
                     BuyItem(BuySeedRemote, seed)
                     task.wait(0.001)
                 end
