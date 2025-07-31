@@ -25,7 +25,7 @@ local Window = Rayfield:CreateWindow({
     }
 })
 
-local Tab = Window:CreateTab("Main", 4483362458)
+local MainTab = Window:CreateTab("Main", 4483362458)
 local Tab = Window:CreateTab("Auto Buy", 4483362458)  
 
 -- Raw Lists
@@ -183,6 +183,6 @@ Tab:CreateToggle({
 -- 📌 Auto Collect Section (อยู่ระหว่างปิดใช้งาน)
 MainTab:CreateParagraph({
     Title = "Auto Collect (กำลังพัฒนา)",
-    Content = "เร็ว ๆ นี้จะมีระบบเก็บอัตโนมัติ\nความเร็ว: Fast = 0.6 / Normal = 1 / Slow = 1.3"
+    Content = "เร็ว ๆ นี้จะมีระบบเก็บอัตโนมัติ ขอโม้ก่อน เร็วกว่าค่ายอื่นแน่นอน รอชมได้เลย Project Swiftz "
 })
 
