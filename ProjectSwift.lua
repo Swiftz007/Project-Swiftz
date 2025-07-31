@@ -27,6 +27,7 @@ local Window = Rayfield:CreateWindow({
 
 local MainTab = Window:CreateTab("Main", 4483362458)
 local Tab = Window:CreateTab("Auto Buy", 4483362458)  
+local PetTab = Window:CreateTab("Pet", 4483362458)  
 
 -- Raw Lists
 local gearListRaw = {
@@ -162,7 +163,7 @@ Tab:CreateToggle({
 })
 
 -- Egg Section
-Tab:CreateDropdown({
+PetTab:CreateDropdown({
     Name = "Select Egg",
     Options = eggList,
     MultiSelection = true,
@@ -172,7 +173,7 @@ Tab:CreateDropdown({
     end
 })
 
-Tab:CreateToggle({
+PetTab:CreateToggle({
     Name = "Auto Buy Egg",
     CurrentValue = false,
     Callback = function(value)
