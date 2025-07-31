@@ -25,7 +25,8 @@ local Window = Rayfield:CreateWindow({
     }
 })
 
-local Tab = Window:CreateTab("🌿 Main", 4483362458)
+local Tab = Window:CreateTab("Main", 4483362458)
+local Tab = Window:CreateTab("Auto Buy", 4483362458)  
 
 -- Raw Lists
 local gearListRaw = {
@@ -178,3 +179,10 @@ Tab:CreateToggle({
         autoBuyEgg = value
     end
 })
+
+-- 📌 Auto Collect Section (อยู่ระหว่างปิดใช้งาน)
+MainTab:CreateParagraph({
+    Title = "Auto Collect (กำลังพัฒนา)",
+    Content = "เร็ว ๆ นี้จะมีระบบเก็บอัตโนมัติ\nความเร็ว: Fast = 0.6 / Normal = 1 / Slow = 1.3"
+})
+
