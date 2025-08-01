@@ -4,7 +4,6 @@ local MarketplaceService = game:GetService("MarketplaceService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local expectedMapName = "Grow a Garden"
-
 local success, productInfo = pcall(function()
     return MarketplaceService:GetProductInfo(game.PlaceId)
 end)
@@ -14,9 +13,10 @@ if not success or not productInfo or not productInfo.Name:lower():match(expected
     return
 end
 
--- โหลด Rayfield UI
+-- ✅ Load Rayfield
 local Rayfield = loadstring(game:HttpGet("https://sirius.menu/rayfield", true))()
 
+-- 🌟 UI Window
 local Window = Rayfield:CreateWindow({
     Name = "Project Swiftz",
     LoadingTitle = "Swiftz Loading...",
@@ -25,165 +25,151 @@ local Window = Rayfield:CreateWindow({
     }
 })
 
--- Tab แยกหมวดหมู่
-local MainTab = Window:CreateTab("📖 Main", 4483362458)
-local ShopTab = Window:CreateTab("🛒 Shop", 4483362458)
-local PetTab = Window:CreateTab("🐣 Pet", 4483362458)
+-- 📦 Tabs
+local MainTab = Window:CreateTab("Main", 4483362458)
+local SeedTab = Window:CreateTab("Seed Shop", 4483362458)
+local GearTab = Window:CreateTab("Gear Shop", 4483362458)
+local PetTab = Window:CreateTab("Pet Shop", 4483362458)
 
--- รายการไอเท็ม
-local seedListRaw = {
-    "Carrot", "Strawberry", "Blueberry", "Orange Tulip", "Tomato",
-    "Corn", "Daffodil", "Watermelon", "Pumpkin", "Apple",
-    "Bamboo", "Coconut", "Cactus", "Dragon Fruit", "Mango",
-    "Grape", "Mushroom", "Pepper", "Cacao", "Beanstalk",
-    "Ember Lily", "Sugar Apple", "Burning Bud", "Giant Pinecone", "Elder Strawberry"
+-- 📜 Raw Lists
+local gearListRaw = {
+    "Watering Can", "Trowel", "Recall Wrench", "Basic Sprinkler", "Advanced Sprinkler",
+    "Godly Sprinkler", "Master Sprinkler", "Medium Toy", "Medium Treat", "Magnifying Glass",
+    "Tanning Mirror", "Cleaning Spray", "Favorite Tool", "Harvest Tool", "Friendship Pot", "Levelup Lollipop"
 }
 
-local gearListRaw = {
-    "Watering Can", "Trowel", "Recall Wrench",
-    "Basic Sprinkler", "Advanced Sprinkler", "Godly Sprinkler", "Master Sprinkler",
-    "Medium Toy", "Medium Treat", "Magnifying Glass", "Tanning Mirror",
-    "Cleaning Spray", "Favorite Tool", "Harvest Tool",
-    "Friendship Pot", "Levelup Lollipop"
+local seedListRaw = {
+    "Carrot", "Strawberry", "Blueberry", "Orange Tulip", "Tomato", "Corn", "Daffodil", "Watermelon",
+    "Pumpkin", "Apple", "Bamboo", "Coconut", "Cactus", "Dragon Fruit", "Mango", "Grape", "Mushroom",
+    "Pepper", "Cacao", "Beanstalk", "Ember Lily", "Sugar Apple", "Burning Bud", "Giant Pinecone", "Elder Strawberry"
 }
 
 local eggListRaw = {
-    "Common Egg", "Common Summer Egg", "Rare Summer Egg",
-    "Mythical Egg", "Paradise Egg", "Bug Egg"
+    "Common Egg", "Common Summer Egg", "Rare Summer Egg", "Mythical Egg", "Paradise Egg", "Bug Egg"
 }
 
--- ใส่ All
-local function withAll(list)
+local function withAllOption(list)
     local newList = { "All" }
-    for _, item in ipairs(list) do table.insert(newList, item) end
+    for _, v in ipairs(list) do table.insert(newList, v) end
     return newList
 end
 
-local seedList = withAll(seedListRaw)
-local gearList = withAll(gearListRaw)
-local eggList = withAll(eggListRaw)
+local gearList = withAllOption(gearListRaw)
+local seedList = withAllOption(seedListRaw)
+local eggList = withAllOption(eggListRaw)
 
--- Remote
-local BuySeedRemote = ReplicatedStorage.GameEvents:FindFirstChild("BuySeedStock")
-local BuyGearRemote = ReplicatedStorage.GameEvents:FindFirstChild("BuyGearStock")
-local BuyEggRemote = ReplicatedStorage.GameEvents:FindFirstChild("BuyPetEgg")
+-- 🔧 Remotes
+local GearRemote = ReplicatedStorage:WaitForChild("GameEvents"):FindFirstChild("BuyGearStock")
+local SeedRemote = ReplicatedStorage:WaitForChild("GameEvents"):FindFirstChild("BuySeedStock")
+local EggRemote  = ReplicatedStorage:WaitForChild("GameEvents"):FindFirstChild("BuyPetEgg")
 
--- State
-local selectedSeeds = {}
-local selectedGears = {}
-local selectedEggs = {}
-local autoBuySeed = false
-local autoBuyGear = false
-local autoBuyEgg = false
+-- 🔁 State
+local selectedGears, selectedSeeds, selectedEggs = {}, {}, {}
+local autoBuyGear, autoBuySeed, autoBuyEgg = false, false, false
 
--- ฟังก์ชันซื้อ
-local function BuyItem(remote, itemName)
-    if remote then
-        pcall(function()
-            remote:FireServer(itemName)
-        end)
+-- 🚀 Fast Buy Loop (ซื้อให้หมดก่อนเปลี่ยน)
+local function FastBuyLoop(remote, selectedList)
+    for _, item in ipairs(selectedList) do
+        for _ = 1, 50 do
+            pcall(function()
+                remote:FireServer(item)
+            end)
+            task.wait(0.005)
+        end
     end
 end
 
--- Loop Auto Buy (ทีละชิ้น)
+-- 🌱 Auto Seed Buy
 task.spawn(function()
     while true do
         if autoBuySeed then
-            for _, seed in ipairs(selectedSeeds) do
-                    for _ = 1 30 do
-                    BuyItem(BuySeedRemote, seed)
-                    task.wait(0.001)
-                end
-            end
+            FastBuyLoop(SeedRemote, selectedSeeds)
         end
-        task.wait(0.001)
+        task.wait(0.1)
     end
 end)
 
+-- ⚙️ Auto Gear Buy
 task.spawn(function()
     while true do
         if autoBuyGear then
-            for _, gear in ipairs(selectedGears) do
-                for _ = 1, 10 do
-                    BuyItem(BuyGearRemote, gear)
-                    task.wait(0.001)
-                end
-            end
+            FastBuyLoop(GearRemote, selectedGears)
         end
-        task.wait(0.001)
+        task.wait(0.1)
     end
 end)
 
+-- 🐣 Auto Egg Buy (แบบเดิม)
 task.spawn(function()
     while true do
         if autoBuyEgg then
             for _, egg in ipairs(selectedEggs) do
-                BuyItem(BuyEggRemote, egg)
-                task.wait(0.001)
+                pcall(function()
+                    EggRemote:FireServer(egg)
+                end)
+                task.wait(0.005)
             end
         end
-        task.wait(0.001)
+        task.wait(0.1)
     end
 end)
 
--- ▼▼▼ UI Elements ▼▼▼
-
--- 🌱 Seed Shop
-ShopTab:CreateDropdown({
+-- 🌿 Seed Tab UI
+SeedTab:CreateDropdown({
     Name = "Select Seed",
     Options = seedList,
     MultiSelection = true,
     CurrentOption = {},
-    Callback = function(opt)
-        selectedSeeds = table.find(opt, "All") and seedListRaw or opt
+    Callback = function(option)
+        selectedSeeds = table.find(option, "All") and seedListRaw or option
     end
 })
 
-ShopTab:CreateToggle({
+SeedTab:CreateToggle({
     Name = "Auto Buy Seed",
     CurrentValue = false,
-    Callback = function(val)
-        autoBuySeed = val
+    Callback = function(value)
+        autoBuySeed = value
     end
 })
 
--- ⚙️ Gear Shop
-ShopTab:CreateDropdown({
+-- ⚙️ Gear Tab UI
+GearTab:CreateDropdown({
     Name = "Select Gear",
     Options = gearList,
     MultiSelection = true,
     CurrentOption = {},
-    Callback = function(opt)
-        selectedGears = table.find(opt, "All") and gearListRaw or opt
+    Callback = function(option)
+        selectedGears = table.find(option, "All") and gearListRaw or option
     end
 })
 
-ShopTab:CreateToggle({
+GearTab:CreateToggle({
     Name = "Auto Buy Gear",
     CurrentValue = false,
-    Callback = function(val)
-        autoBuyGear = val
+    Callback = function(value)
+        autoBuyGear = value
     end
 })
 
--- 🥚 Pet Shop
+-- 🐣 Pet Tab UI
 PetTab:CreateDropdown({
     Name = "Select Egg",
     Options = eggList,
     MultiSelection = true,
     CurrentOption = {},
-    Callback = function(opt)
-        selectedEggs = table.find(opt, "All") and eggListRaw or opt
+    Callback = function(option)
+        selectedEggs = table.find(option, "All") and eggListRaw or option
     end
 })
 
 PetTab:CreateToggle({
     Name = "Auto Buy Egg",
     CurrentValue = false,
-    Callback = function(val)
-        autoBuyEgg = val
+    Callback = function(value)
+        autoBuyEgg = value
     end
-})
+})n
 
 -- 📌 Auto Collect Section (อยู่ระหว่างปิดใช้งาน)
 MainTab:CreateParagraph({
