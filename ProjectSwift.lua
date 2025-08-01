@@ -169,7 +169,7 @@ PetTab:CreateToggle({
     Callback = function(value)
         autoBuyEgg = value
     end
-})n
+})
 
 -- 📌 Auto Collect Section (อยู่ระหว่างปิดใช้งาน)
 MainTab:CreateParagraph({
