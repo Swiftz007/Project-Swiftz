@@ -176,3 +176,8 @@ MainTab:CreateParagraph({
     Title = "Auto Collect (กำลังพัฒนา)",
     Content = "เร็ว ๆ นี้จะมีระบบเก็บอัตโนมัติ ขอโม้ก่อน ตึงกว่าค่ายอื่นแน่นอนล้านเปอร์เซ็นต์" 
 })
+
+MainTab:CreateParagraph({
+    Title = "Auto Sell  (กำลังพัฒนา)",
+    Content = "เร็ว ๆ นี้จะมีให้เห็นแน่นอน" 
+})
