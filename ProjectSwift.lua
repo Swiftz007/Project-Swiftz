@@ -74,7 +74,7 @@ local function FastBuyLoop(remote, selectedList)
             pcall(function()
                 remote:FireServer(item)
             end)
-            task.wait(0.005)
+            task.wait(0.001)
         end
     end
 end
@@ -85,7 +85,7 @@ task.spawn(function()
         if autoBuySeed then
             FastBuyLoop(SeedRemote, selectedSeeds)
         end
-        task.wait(0.1)
+        task.wait(0.01)
     end
 end)
 
@@ -95,7 +95,7 @@ task.spawn(function()
         if autoBuyGear then
             FastBuyLoop(GearRemote, selectedGears)
         end
-        task.wait(0.1)
+        task.wait(0.001)
     end
 end)
 
@@ -107,10 +107,10 @@ task.spawn(function()
                 pcall(function()
                     EggRemote:FireServer(egg)
                 end)
-                task.wait(0.005)
+                task.wait(0.001)
             end
         end
-        task.wait(0.1)
+        task.wait(0.01)
     end
 end)
 
