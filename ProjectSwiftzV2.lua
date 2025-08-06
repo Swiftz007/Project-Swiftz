@@ -127,6 +127,6 @@ Window:SelectTab(1)
 
 Fluent:Notify({
     Title = "Project Swiftz",
-    Content = " Project Swiftz Loaded",
+    Content = "Swiftz Loaded",
     Duration = 6
 })
