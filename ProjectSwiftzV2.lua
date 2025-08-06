@@ -1,39 +1,17 @@
--- 🔒 ตรวจสอบชื่อแมพก่อนโหลด UI
-local Players = game:GetService("Players")
-local MarketplaceService = game:GetService("MarketplaceService")
+-- ⚙️ โหลด Fluent UI
+local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
+local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/SaveManager.lua"))()
+local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/InterfaceManager.lua"))()
+
+-- 📦 Services
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local GearRemote = ReplicatedStorage:WaitForChild("GameEvents"):FindFirstChild("BuyGearStock")
+local SeedRemote = ReplicatedStorage:WaitForChild("GameEvents"):FindFirstChild("BuySeedStock")
+local EggRemote  = ReplicatedStorage:WaitForChild("GameEvents"):FindFirstChild("BuyPetEgg")
 
-local expectedMapName = "Grow a Garden"
-local success, productInfo = pcall(function()
-    return MarketplaceService:GetProductInfo(game.PlaceId)
-end)
-
-if not success or not productInfo or not productInfo.Name:lower():match(expectedMapName:lower()) then
-    Players.LocalPlayer:Kick("Project Swiftz : Not support this map\nDiscord : https://discord.gg/mqWbztWd")
-    return
-end
-
--- ✅ Load Rayfield
-local Rayfield = loadstring(game:HttpGet("https://sirius.menu/rayfield", true))()
-
--- 🌟 UI Window
-local Window = Rayfield:CreateWindow({
-    Name = "Project Swiftz",
-    LoadingTitle = "Swiftz Loading...",
-    ConfigurationSaving = {
-        Enabled = false
-    }
-})
-
--- 📦 Tabs
-local MainTab = Window:CreateTab("Main", 4483362458)
-local SeedTab = Window:CreateTab("Seed Shop", 4483362458)
-local GearTab = Window:CreateTab("Gear Shop", 4483362458)
-local PetTab = Window:CreateTab("Pet Shop", 4483362458)
-
--- 📜 Raw Lists
+-- 📋 รายการของ
 local gearListRaw = {
-    "Watering Can", "Trowel", "Recall Wrench", "Basic Sprinkler", "Advanced Sprinkler",
+    "Watering Can", "Trowel", "Recall Wrench", "Trading Ticket", "Basic Sprinkler", "Advanced Sprinkler",
     "Godly Sprinkler", "Master Sprinkler", "Medium Toy", "Medium Treat", "Magnifying Glass",
     "Tanning Mirror", "Cleaning Spray", "Favorite Tool", "Harvest Tool", "Friendship Pot", "Levelup Lollipop"
 }
@@ -49,130 +27,106 @@ local eggListRaw = {
 }
 
 local function withAllOption(list)
-    local newList = { "All" }
-    for _, v in ipairs(list) do table.insert(newList, v) end
-    return newList
+    local copy = table.clone(list)
+    table.insert(copy, 1, "All")
+    return copy
 end
 
-local gearList = withAllOption(gearListRaw)
-local seedList = withAllOption(seedListRaw)
-local eggList = withAllOption(eggListRaw)
+-- 🪟 Fluent Window
+local Window = Fluent:CreateWindow({
+    Title = "Project Swiftz",
+    SubTitle = "Grow a Graden",
+    TabWidth = 160,
+    Size = UDim2.fromOffset(580, 460),
+    Acrylic = true,
+    Theme = "Dark",
+    MinimizeKey = Enum.KeyCode.LeftControl
+})
 
--- 🔧 Remotes
-local GearRemote = ReplicatedStorage:WaitForChild("GameEvents"):FindFirstChild("BuyGearStock")
-local SeedRemote = ReplicatedStorage:WaitForChild("GameEvents"):FindFirstChild("BuySeedStock")
-local EggRemote  = ReplicatedStorage:WaitForChild("GameEvents"):FindFirstChild("BuyPetEgg")
+local Tabs = {
+    Shop = Window:AddTab({ Title = "Shop", Icon = "shopping-cart" }),
+    Settings = Window:AddTab({ Title = "Settings", Icon = "settings" })
+}
 
--- 🔁 State
-local selectedGears, selectedSeeds, selectedEggs = {}, {}, {}
-local autoBuyGear, autoBuySeed, autoBuyEgg = false, false, false
+local Options = Fluent.Options
 
--- 🚀 Fast Buy Loop (ซื้อให้หมดก่อนเปลี่ยน)
-local function FastBuyLoop(remote, selectedList)
-    for _, item in ipairs(selectedList) do
-        for _ = 1, 50 do
-            pcall(function()
-                remote:FireServer(item)
-            end)
-            task.wait(0.005)
+-- 🛍️ Multi Dropdowns สำหรับ Shop
+local gearDropdown = Tabs.Shop:AddDropdown("GearDropdown", {
+    Title = "Gears",
+    Values = withAllOption(gearListRaw),
+    Multi = true,
+    Default = {},
+})
+
+local seedDropdown = Tabs.Shop:AddDropdown("SeedDropdown", {
+    Title = "Seeds",
+    Values = withAllOption(seedListRaw),
+    Multi = true,
+    Default = {},
+})
+
+local eggDropdown = Tabs.Shop:AddDropdown("EggDropdown", {
+    Title = "Eggs",
+    Values = withAllOption(eggListRaw),
+    Multi = true,
+    Default = {},
+})
+
+-- 🔄 ระบบเปิดปิด Auto Buy
+local AutoBuyToggle = Tabs.Shop:AddToggle("AutoBuy", {
+    Title = "Auto Buy (Fast Loop)",
+    Default = false
+})
+
+-- 🧠 ฟังก์ชันเลือกไอเทม
+local function getSelectedItems(dropdown, rawList)
+    local selected = {}
+    if dropdown.Value["All"] then
+        return rawList
+    end
+    for item, state in pairs(dropdown.Value) do
+        if state then
+            table.insert(selected, item)
         end
     end
+    return selected
 end
 
--- 🌱 Auto Seed Buy
+-- 🔁 รัน Auto Buy Loop
 task.spawn(function()
     while true do
-        if autoBuySeed then
-            FastBuyLoop(SeedRemote, selectedSeeds)
-        end
-        task.wait(0.1)
-    end
-end)
-
--- ⚙️ Auto Gear Buy
-task.spawn(function()
-    while true do
-        if autoBuyGear then
-            FastBuyLoop(GearRemote, selectedGears)
-        end
-        task.wait(0.1)
-    end
-end)
-
--- 🐣 Auto Egg Buy (แบบเดิม)
-task.spawn(function()
-    while true do
-        if autoBuyEgg then
-            for _, egg in ipairs(selectedEggs) do
-                pcall(function()
-                    EggRemote:FireServer(egg)
-                end)
-                task.wait(0.005)
+        task.wait() -- ไม่มีดีเลย์เพื่อความเร็วสูงสุด
+        if AutoBuyToggle.Value then
+            -- ซื้อ Gear
+            for _, item in ipairs(getSelectedItems(gearDropdown, gearListRaw)) do
+                GearRemote:FireServer(item)
+            end
+            -- ซื้อ Seed
+            for _, item in ipairs(getSelectedItems(seedDropdown, seedListRaw)) do
+                SeedRemote:FireServer(item)
+            end
+            -- ซื้อ Egg
+            for _, item in ipairs(getSelectedItems(eggDropdown, eggListRaw)) do
+                EggRemote:FireServer(item)
             end
         end
-        task.wait(0.1)
     end
 end)
 
--- 🌿 Seed Tab UI
-SeedTab:CreateDropdown({
-    Name = "Select Seed",
-    Options = seedList,
-    MultiSelection = true,
-    CurrentOption = {},
-    Callback = function(option)
-        selectedSeeds = table.find(option, "All") and seedListRaw or option
-    end
-})
+-- ⚙️ SaveManager / Interface
+SaveManager:SetLibrary(Fluent)
+InterfaceManager:SetLibrary(Fluent)
+SaveManager:IgnoreThemeSettings()
+SaveManager:SetIgnoreIndexes({})
+InterfaceManager:SetFolder("ProjectSwiftz")
+SaveManager:SetFolder("ProjectSwiftz/GrowAGarden")
+InterfaceManager:BuildInterfaceSection(Tabs.Settings)
+SaveManager:BuildConfigSection(Tabs.Settings)
+SaveManager:LoadAutoloadConfig()
+Window:SelectTab(1)
 
-SeedTab:CreateToggle({
-    Name = "Auto Buy Seed",
-    CurrentValue = false,
-    Callback = function(value)
-        autoBuySeed = value
-    end
-})
-
--- ⚙️ Gear Tab UI
-GearTab:CreateDropdown({
-    Name = "Select Gear",
-    Options = gearList,
-    MultiSelection = true,
-    CurrentOption = {},
-    Callback = function(option)
-        selectedGears = table.find(option, "All") and gearListRaw or option
-    end
-})
-
-GearTab:CreateToggle({
-    Name = "Auto Buy Gear",
-    CurrentValue = false,
-    Callback = function(value)
-        autoBuyGear = value
-    end
-})
-
--- 🐣 Pet Tab UI
-PetTab:CreateDropdown({
-    Name = "Select Egg",
-    Options = eggList,
-    MultiSelection = true,
-    CurrentOption = {},
-    Callback = function(option)
-        selectedEggs = table.find(option, "All") and eggListRaw or option
-    end
-})
-
-PetTab:CreateToggle({
-    Name = "Auto Buy Egg",
-    CurrentValue = false,
-    Callback = function(value)
-        autoBuyEgg = value
-    end
-})n
-
--- 📌 Auto Collect Section (อยู่ระหว่างปิดใช้งาน)
-MainTab:CreateParagraph({
-    Title = "Auto Collect (กำลังพัฒนา)",
-    Content = "เร็ว ๆ นี้จะมีระบบเก็บอัตโนมัติ ขอโม้ก่อน ตึงกว่าค่ายอื่นแน่นอนล้านเปอร์เซ็นต์" 
+Fluent:Notify({
+    Title = "Project Swiftz",
+    Content = " Project Swiftz Loaded",
+    Duration = 6
 })
