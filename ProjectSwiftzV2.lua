@@ -13,7 +13,7 @@ local EggRemote  = ReplicatedStorage:WaitForChild("GameEvents"):FindFirstChild("
 local gearListRaw = {
     "Watering Can", "Trowel", "Recall Wrench", "Trading Ticket", "Basic Sprinkler", "Advanced Sprinkler",
     "Godly Sprinkler", "Master Sprinkler", "Medium Toy", "Medium Treat", "Magnifying Glass",
-    "Tanning Mirror", "Cleaning Spray", "Favorite Tool", "Harvest Tool", "Friendship Pot", "Levelup Lollipop"
+    "Tanning Mirror", "Cleaning Spray", "Favorite Tool", "Harvest Tool", "Friendship Pot", "Grandmaster Sprinkler", "Levelup Lollipop"
 }
 
 local seedListRaw = {
