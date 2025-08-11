@@ -39,7 +39,7 @@ local Window = Fluent:CreateWindow({
     TabWidth = 160,
     Size = UDim2.fromOffset(580, 460),
     Acrylic = true,
-    Theme = "Dark",
+    Theme = "Red",
     MinimizeKey = Enum.KeyCode.LeftControl
 })
 
@@ -74,7 +74,7 @@ local eggDropdown = Tabs.Shop:AddDropdown("EggDropdown", {
 
 -- 🔄 ระบบเปิดปิด Auto Buy
 local AutoBuyToggle = Tabs.Shop:AddToggle("AutoBuy", {
-    Title = "Auto Buy (Fast Loop)",
+    Title = "Auto Buy",
     Default = false
 })
 
@@ -95,7 +95,7 @@ end
 -- 🔁 รัน Auto Buy Loop
 task.spawn(function()
     while true do
-        task.wait() -- ไม่มีดีเลย์เพื่อความเร็วสูงสุด
+        task.wait(0) -- ไม่มีดีเลย์เพื่อความเร็วสูงสุด
         if AutoBuyToggle.Value then
             -- ซื้อ Gear
             for _, item in ipairs(getSelectedItems(gearDropdown, gearListRaw)) do
