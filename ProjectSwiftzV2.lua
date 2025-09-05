@@ -1,3 +1,18 @@
+-- 🔒 ตรวจสอบชื่อแมพก่อนโหลด UI
+local Players = game:GetService("Players")
+local MarketplaceService = game:GetService("MarketplaceService")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+
+local expectedMapName = "Grow a Garden"
+local success, productInfo = pcall(function()
+    return MarketplaceService:GetProductInfo(game.PlaceId)
+end)
+
+if not success or not productInfo or not productInfo.Name:lower():match(expectedMapName:lower()) then
+    Players.LocalPlayer:Kick("Swiftz Hub : Not support this map\nDiscord : https://discord.gg/mqWbztWd")
+    return
+end
+
 -- ⚙️ โหลด Fluent UI
 local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
 local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/SaveManager.lua"))()
@@ -34,12 +49,12 @@ end
 
 -- 🪟 Fluent Window
 local Window = Fluent:CreateWindow({
-    Title = "Project Swiftz",
+    Title = "Swiftz Hub",
     SubTitle = "Grow a Graden",
     TabWidth = 160,
     Size = UDim2.fromOffset(580, 460),
     Acrylic = true,
-    Theme = "Red",
+    Theme = "Black",
     MinimizeKey = Enum.KeyCode.LeftControl
 })
 
@@ -95,7 +110,7 @@ end
 -- 🔁 รัน Auto Buy Loop
 task.spawn(function()
     while true do
-        task.wait(0) -- ไม่มีดีเลย์เพื่อความเร็วสูงสุด
+        task.wait(1) -- ไม่มีดีเลย์เพื่อความเร็วสูงสุด
         if AutoBuyToggle.Value then
             -- ซื้อ Gear
             for _, item in ipairs(getSelectedItems(gearDropdown, gearListRaw)) do
@@ -126,7 +141,7 @@ SaveManager:LoadAutoloadConfig()
 Window:SelectTab(1)
 
 Fluent:Notify({
-    Title = "Project Swiftz",
+    Title = "Swiftz Hub",
     Content = "Swiftz Loaded",
     Duration = 6
 })
