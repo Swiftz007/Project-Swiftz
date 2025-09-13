@@ -1,183 +1,165 @@
--- 🔒 ตรวจสอบชื่อแมพก่อนโหลด UI
+-- RandomLowServerFinder_autoplace_exploit.lua
+-- Executor environment required (syn.request / http.request / http_request)
+-- ไม่ต้องตั้ง PLACE_ID ด้วยมือ — ใช้ game.PlaceId อัตโนมัติ
+
+local HttpRequest = syn and syn.request or http and http.request or http_request -- รองรับหลาย executor
+local HttpService = game:GetService("HttpService")
+local TeleportService = game:GetService("TeleportService")
 local Players = game:GetService("Players")
-local MarketplaceService = game:GetService("MarketplaceService")
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local LocalPlayer = Players.LocalPlayer
 
-local expectedMapName = "Grow a Garden"
-local success, productInfo = pcall(function()
-    return MarketplaceService:GetProductInfo(game.PlaceId)
-end)
-
-if not success or not productInfo or not productInfo.Name:lower():match(expectedMapName:lower()) then
-    Players.LocalPlayer:Kick("Project Swiftz : Not support this map\nDiscord : https://discord.gg/mqWbztWd")
+-- ใช้ game.PlaceId อัตโนมัติ (ไม่ต้องตั้งค่า)
+local PLACE_ID = tonumber(tostring(game.PlaceId)) or nil
+if not PLACE_ID then
+    warn("ไม่สามารถอ่าน game.PlaceId ได้")
     return
 end
 
--- ✅ Load Rayfield
-local Rayfield = loadstring(game:HttpGet("https://sirius.menu/rayfield", true))()
+-- ปรับค่าได้ตามต้องการ
+local MAX_PLAYERS_THRESHOLD = 3     -- <= ค่านี้ถือว่า 'คนน้อย'
+local RESULT_LIMIT_PER_PAGE = 100
+local MAX_PAGES_TO_FETCH = 6        -- เพิ่ม/ลดเพื่อควบคุมจำนวน request
+local EXCLUDE_CURRENT = true
+local MAX_CANDIDATES = 60
+local TELEPORT_RETRY = 2
 
--- 🌟 UI Window
-local Window = Rayfield:CreateWindow({
-    Name = "Project Swiftz",
-    LoadingTitle = "Swiftz Loading...",
-    ConfigurationSaving = {
-        Enabled = false
-    }
-})
-
--- 📦 Tabs
-local MainTab = Window:CreateTab("Main", 4483362458)
-local SeedTab = Window:CreateTab("Seed Shop", 4483362458)
-local GearTab = Window:CreateTab("Gear Shop", 4483362458)
-local PetTab = Window:CreateTab("Pet Shop", 4483362458)
-
--- 📜 Raw Lists
-local gearListRaw = {
-    "Watering Can", "Trowel", "Recall Wrench", "Basic Sprinkler", "Advanced Sprinkler",
-    "Godly Sprinkler", "Master Sprinkler", "Medium Toy", "Medium Treat", "Magnifying Glass",
-    "Tanning Mirror", "Cleaning Spray", "Favorite Tool", "Harvest Tool", "Friendship Pot", "Levelup Lollipop"
-}
-
-local seedListRaw = {
-    "Carrot", "Strawberry", "Blueberry", "Orange Tulip", "Tomato", "Corn", "Daffodil", "Watermelon",
-    "Pumpkin", "Apple", "Bamboo", "Coconut", "Cactus", "Dragon Fruit", "Mango", "Grape", "Mushroom",
-    "Pepper", "Cacao", "Beanstalk", "Ember Lily", "Sugar Apple", "Burning Bud", "Giant Pinecone", "Elder Strawberry"
-}
-
-local eggListRaw = {
-    "Common Egg", "Common Summer Egg", "Rare Summer Egg", "Mythical Egg", "Paradise Egg", "Bug Egg"
-}
-
-local function withAllOption(list)
-    local newList = { "All" }
-    for _, v in ipairs(list) do table.insert(newList, v) end
-    return newList
+-- helper: safe http request
+local function safe_request(opts)
+    if not HttpRequest then return nil, "no-http" end
+    local ok, res = pcall(function() return HttpRequest(opts) end)
+    if not ok or not res then
+        return nil, ok and res or "request-failed"
+    end
+    return res, nil
 end
 
-local gearList = withAllOption(gearListRaw)
-local seedList = withAllOption(seedListRaw)
-local eggList = withAllOption(eggListRaw)
-
--- 🔧 Remotes
-local GearRemote = ReplicatedStorage:WaitForChild("GameEvents"):FindFirstChild("BuyGearStock")
-local SeedRemote = ReplicatedStorage:WaitForChild("GameEvents"):FindFirstChild("BuySeedStock")
-local EggRemote  = ReplicatedStorage:WaitForChild("GameEvents"):FindFirstChild("BuyPetEgg")
-
--- 🔁 State
-local selectedGears, selectedSeeds, selectedEggs = {}, {}, {}
-local autoBuyGear, autoBuySeed, autoBuyEgg = false, false, false
-
--- 🚀 Fast Buy Loop (ซื้อให้หมดก่อนเปลี่ยน)
-local function FastBuyLoop(remote, selectedList)
-    for _, item in ipairs(selectedList) do
-        for _ = 1, 50 do
-            pcall(function()
-                remote:FireServer(item)
-            end)
-            task.wait(0.001)
-        end
+-- ดึงหน้า server list ของ place นี้
+local function fetch_server_page(placeId, cursor)
+    local url = ("https://games.roblox.com/v1/games/%d/servers/Public?limit=%d&sortOrder=Asc")
+                :format(placeId, RESULT_LIMIT_PER_PAGE)
+    if cursor and tostring(cursor) ~= "" then
+        url = url .. "&cursor=" .. HttpService:UrlEncode(tostring(cursor))
     end
+
+    local res, err = safe_request({
+        Url = url,
+        Method = "GET",
+        Headers = {
+            ["User-Agent"] = "Roblox",
+        },
+    })
+    if not res then
+        return nil, "http error: "..tostring(err)
+    end
+    if res.StatusCode ~= 200 then
+        return nil, ("status %d"):format(res.StatusCode)
+    end
+
+    local ok, data = pcall(function() return HttpService:JSONDecode(res.Body) end)
+    if not ok then return nil, "json decode fail" end
+    return data, nil
 end
 
--- 🌱 Auto Seed Buy
-task.spawn(function()
-    while true do
-        if autoBuySeed then
-            FastBuyLoop(SeedRemote, selectedSeeds)
-        end
-        task.wait(0.01)
-    end
-end)
+-- เก็บ candidates แบบ bounded
+local function collect_candidates_for_place(placeId)
+    local candidates = {}
+    local cursor = nil
+    local pages = 0
+    local currentJobId = tostring(game.JobId or "")
 
--- ⚙️ Auto Gear Buy
-task.spawn(function()
-    while true do
-        if autoBuyGear then
-            FastBuyLoop(GearRemote, selectedGears)
+    repeat
+        pages = pages + 1
+        local data, err = fetch_server_page(placeId, cursor)
+        if not data then
+            warn("fetch failed:", err)
+            break
         end
-        task.wait(0.001)
-    end
-end)
 
--- 🐣 Auto Egg Buy (แบบเดิม)
-task.spawn(function()
-    while true do
-        if autoBuyEgg then
-            for _, egg in ipairs(selectedEggs) do
-                pcall(function()
-                    EggRemote:FireServer(egg)
-                end)
-                task.wait(0.001)
+        for _, s in ipairs(data.data or {}) do
+            local playing = s.playing or 0
+            local id = tostring(s.id or s.id)
+            if playing <= MAX_PLAYERS_THRESHOLD then
+                if not (EXCLUDE_CURRENT and id == currentJobId) then
+                    table.insert(candidates, {id = id, playing = playing})
+                    if #candidates >= MAX_CANDIDATES then break end
+                end
             end
         end
-        task.wait(0.01)
+
+        cursor = data.nextPageCursor
+        if not cursor or cursor == "" then break end
+    until pages >= MAX_PAGES_TO_FETCH or #candidates >= MAX_CANDIDATES
+
+    return candidates
+end
+
+-- shuffle
+local function shuffle(t)
+    local n = #t
+    for i = n, 2, -1 do
+        local j = math.random(i)
+        t[i], t[j] = t[j], t[i]
     end
-end)
+end
 
--- 🌿 Seed Tab UI
-SeedTab:CreateDropdown({
-    Name = "Select Seed",
-    Options = seedList,
-    MultiSelection = true,
-    CurrentOption = {},
-    Callback = function(option)
-        selectedSeeds = table.find(option, "All") and seedListRaw or option
+-- เลือกแบบสุ่ม แต่มี bias ไปที่เซิร์ฟเวอร์ที่ว่างกว่า
+local function pick_random_candidate(cands)
+    if #cands == 0 then return nil end
+    table.sort(cands, function(a,b) return (a.playing or 0) < (b.playing or 0) end)
+    local poolSize = math.max(1, math.floor(#cands * 0.45))
+    local pool = {}
+    for i = 1, poolSize do pool[#pool+1] = cands[i] end
+    shuffle(pool)
+    return pool[math.random(#pool)]
+end
+
+-- พยายาม teleport (retry)
+local function try_teleport(placeId, instanceId)
+    for attempt = 1, TELEPORT_RETRY do
+        local ok, err = pcall(function()
+            TeleportService:TeleportToPlaceInstance(placeId, instanceId, {LocalPlayer})
+        end)
+        if ok then return true end
+        warn("Teleport attempt "..attempt.." failed:", tostring(err))
     end
-})
+    return false
+end
 
-SeedTab:CreateToggle({
-    Name = "Auto Buy Seed",
-    CurrentValue = false,
-    Callback = function(value)
-        autoBuySeed = value
+-- main: หาแล้วย้าย (ใช้เกมปัจจุบันโดยอัตโนมัติ)
+math.randomseed(tick() + os.time())
+local function find_and_move_random_low_server_for_current_place()
+    print("เริ่มค้นหาเซิร์ฟเวอร์คนน้อยสำหรับ place:", PLACE_ID)
+    local candidates = collect_candidates_for_place(PLACE_ID)
+    if not candidates or #candidates == 0 then
+        warn("ไม่พบเซิร์ฟเวอร์ที่ตรงเงื่อนไข (คนน้อย <= "..tostring(MAX_PLAYERS_THRESHOLD)..")")
+        return false
     end
-})
 
--- ⚙️ Gear Tab UI
-GearTab:CreateDropdown({
-    Name = "Select Gear",
-    Options = gearList,
-    MultiSelection = true,
-    CurrentOption = {},
-    Callback = function(option)
-        selectedGears = table.find(option, "All") and gearListRaw or option
+    local chosen = pick_random_candidate(candidates)
+    if not chosen then
+        warn("เลือกไม่ได้")
+        return false
     end
-})
 
-GearTab:CreateToggle({
-    Name = "Auto Buy Gear",
-    CurrentValue = false,
-    Callback = function(value)
-        autoBuyGear = value
+    print(("เลือก id=%s (playing=%d). พยายามย้าย..."):format(tostring(chosen.id), chosen.playing))
+    local ok = try_teleport(PLACE_ID, chosen.id)
+    if ok then
+        print("เรียก teleport สำเร็จ (คำสั่งถูกส่งแล้ว)")
+        return true
     end
-})
 
--- 🐣 Pet Tab UI
-PetTab:CreateDropdown({
-    Name = "Select Egg",
-    Options = eggList,
-    MultiSelection = true,
-    CurrentOption = {},
-    Callback = function(option)
-        selectedEggs = table.find(option, "All") and eggListRaw or option
+    -- fallback: ลอง candidate อื่นแบบสุ่มเรียง
+    shuffle(candidates)
+    for _, c in ipairs(candidates) do
+        if c.id ~= chosen.id then
+            print("ลองย้ายไป:", c.id, c.playing)
+            if try_teleport(PLACE_ID, c.id) then return true end
+        end
     end
-})
 
-PetTab:CreateToggle({
-    Name = "Auto Buy Egg",
-    CurrentValue = false,
-    Callback = function(value)
-        autoBuyEgg = value
-    end
-})
+    warn("ย้ายล้มเหลวทั้งหมด")
+    return false
+end
 
--- 📌 Auto Collect Section (อยู่ระหว่างปิดใช้งาน)
-MainTab:CreateParagraph({
-    Title = "Auto Collect (กำลังพัฒนา)",
-    Content = "เร็ว ๆ นี้จะมีระบบเก็บอัตโนมัติ ขอโม้ก่อน ตึงกว่าค่ายอื่นแน่นอนล้านเปอร์เซ็นต์" 
-})
-
-MainTab:CreateParagraph({
-    Title = "Auto Sell  (กำลังพัฒนา)",
-    Content = "เร็ว ๆ นี้จะมีให้เห็นแน่นอน" 
-})
+-- เรียกใช้งาน
+find_and_move_random_low_server_for_current_place()
