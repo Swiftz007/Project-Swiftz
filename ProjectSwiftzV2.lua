@@ -59,7 +59,11 @@ local Window = Fluent:CreateWindow({
 })
 
 local Tabs = {
+    Main = Window:AddTab({ Title = "Main", Icon = "home" }),
+    Multi = Window:AddTab({ Title = "Multi", Icon = "target" }),
     Shop = Window:AddTab({ Title = "Shop", Icon = "shopping-cart" }),
+    Trade = Window:AddTap({ Title = "Trade", Icon = "Trade" }),
+    Visual = Window:AddTab({ Title = "Visual", Icon = "eye" }),
     Settings = Window:AddTab({ Title = "Settings", Icon = "settings" })
 }
 
