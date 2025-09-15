@@ -62,7 +62,6 @@ local Tabs = {
     Main = Window:AddTab({ Title = "Main", Icon = "home" }),
     Multi = Window:AddTab({ Title = "Multi", Icon = "target" }),
     Shop = Window:AddTab({ Title = "Shop", Icon = "shopping-cart" }),
-    Trade = Window:AddTap({ Title = "Trade", Icon = "Trade" }),
     Visual = Window:AddTab({ Title = "Visual", Icon = "eye" }),
     Settings = Window:AddTab({ Title = "Settings", Icon = "settings" })
 }
@@ -114,7 +113,7 @@ end
 -- 🔁 รัน Auto Buy Loop
 task.spawn(function()
     while true do
-        task.wait(1) -- ไม่มีดีเลย์เพื่อความเร็วสูงสุด
+        task.wait(0.5) -- ไม่มีดีเลย์เพื่อความเร็วสูงสุด
         if AutoBuyToggle.Value then
             -- ซื้อ Gear
             for _, item in ipairs(getSelectedItems(gearDropdown, gearListRaw)) do
