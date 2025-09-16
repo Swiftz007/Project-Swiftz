@@ -34,11 +34,12 @@ local gearListRaw = {
 local seedListRaw = {
     "Carrot", "Strawberry", "Blueberry", "Orange Tulip", "Tomato", "Corn", "Daffodil", "Watermelon",
     "Pumpkin", "Apple", "Bamboo", "Coconut", "Cactus", "Dragon Fruit", "Mango", "Grape", "Mushroom",
-    "Pepper", "Cacao", "Beanstalk", "Ember Lily", "Sugar Apple", "Burning Bud", "Giant Pinecone", "Elder Strawberry" , "Romannesco"
+    "Pepper", "Cacao", "Beanstalk", "Ember Lily", "Sugar Apple", "Burning Bud", "Giant Pinecone", "Elder Strawberry", "Romannesco"
 }
 
 local eggListRaw = {
-    "Common Egg", "Common Summer Egg", "Rare Summer Egg", "Mythical Egg", "Paradise Egg", "Bug Egg"
+    "Common Egg", "Uncommon Egg", "Common Summer Egg", "Rare Summer Egg", "Rare Egg",  "Mythical Egg", "Legendary Egg", "Paradise Egg", "Bug Egg"
+     "Bee Egg"
 }
 
 local function withAllOption(list)
