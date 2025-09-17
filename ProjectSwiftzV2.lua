@@ -38,8 +38,7 @@ local seedListRaw = {
 }
 
 local eggListRaw = {
-    "Common Egg", "Uncommon Egg", "Common Summer Egg", "Rare Summer Egg", "Rare Egg",  "Mythical Egg", "Legendary Egg", "Paradise Egg", "Bug Egg"
-     "Bee Egg"
+    "Common Egg", "Uncommon Egg", "Common Summer Egg", "Rare Summer Egg", "Rare Egg",  "Mythical Egg", "Legendary Egg", "Paradise Egg", "Bug Egg", "Bee Egg"
 }
 
 local function withAllOption(list)
