@@ -13,55 +13,6 @@ if not success or not productInfo or not productInfo.Name:lower():match(expected
     return
 end
 
-local Players = game:GetService("Players")
-local UserInputService = game:GetService("UserInputService")
-local Player = Players.LocalPlayer
-
--- สถานะ UI
-local uiVisible = true
-local WindowLoaded = false
-local Window
-
--- ===== สร้าง Toggle [Hz] =====
-local ScreenGui = Instance.new("ScreenGui")
-ScreenGui.Name = "HighZ_ToggleGUI"
-ScreenGui.Parent = Player:WaitForChild("PlayerGui")
-ScreenGui.ResetOnSpawn = false
-
-local ToggleButton = Instance.new("TextButton")
-ToggleButton.Parent = ScreenGui
-ToggleButton.Size = UDim2.new(0, 60, 0, 30)
-ToggleButton.Position = UDim2.new(0.05,0,0.2,0)
-ToggleButton.BackgroundColor3 = Color3.fromRGB(75,30,75)
-ToggleButton.BorderColor3 = Color3.fromRGB(0,255,0)
-ToggleButton.BorderSizePixel = 2
-ToggleButton.Text = "Sź"
-ToggleButton.TextColor3 = Color3.fromRGB(255,0,0)
-ToggleButton.TextScaled = true
-ToggleButton.Font = Enum.Font.GothamBold
-ToggleButton.Active = true
-ToggleButton.Draggable = true
-ToggleButton.AutoButtonColor = false
-
--- ฟังก์ชัน Toggle UI
-local function ToggleUI()
-    uiVisible = not uiVisible
-    if WindowLoaded and Window and Window.Root then
-        Window.Root.Visible = uiVisible
-    end
-    ToggleButton.BackgroundColor3 = uiVisible and Color3.fromRGB(30,30,30) or Color3.fromRGB(60,60,60)
-end
-
--- ปุ่มกด Toggle
-ToggleButton.MouseButton1Click:Connect(ToggleUI)
--- ปุ่ม LeftControl
-UserInputService.InputBegan:Connect(function(input,gpe)
-    if not gpe and input.UserInputType == Enum.UserInputType.Keyboard and input.KeyCode == Enum.KeyCode.LeftControl then
-        ToggleUI()
-    end
-end)
-
-
 -- ⚙️ โหลด Fluent UI
 local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
 local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/SaveManager.lua"))()
@@ -99,7 +50,7 @@ end
 -- 🪟 Fluent Window
 local Window = Fluent:CreateWindow({
     Title = "Swiftz Hub",
-    SubTitle = "Grow a Graden",
+    SubTitle = "[ Grow a Graden ]",
     TabWidth = 160,
     Size = UDim2.fromOffset(580, 460),
     Acrylic = true,
