@@ -1,150 +1,254 @@
--- 🔒 ตรวจสอบชื่อแมพก่อนโหลด UI
-local Players = game:GetService("Players")
-local MarketplaceService = game:GetService("MarketplaceService")
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
-
-local expectedMapName = "Grow a Garden"
-local success, productInfo = pcall(function()
-    return MarketplaceService:GetProductInfo(game.PlaceId)
-end)
-
-if not success or not productInfo or not productInfo.Name:lower():match(expectedMapName:lower()) then
-    Players.LocalPlayer:Kick("Swiftz Hub : Not support this map\nDiscord : https://discord.gg/mqWbztWd")
-    return
-end
-
--- ⚙️ โหลด Fluent UI
 local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
 local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/SaveManager.lua"))()
 local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/InterfaceManager.lua"))()
 
--- 📦 Services
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local GearRemote = ReplicatedStorage:WaitForChild("GameEvents"):FindFirstChild("BuyGearStock")
-local SeedRemote = ReplicatedStorage:WaitForChild("GameEvents"):FindFirstChild("BuySeedStock")
-local EggRemote  = ReplicatedStorage:WaitForChild("GameEvents"):FindFirstChild("BuyPetEgg")
-
--- 📋 รายการของ
-local gearListRaw = {
-    "Watering Can", "Trowel", "Recall Wrench", "Trading Ticket", "Basic Sprinkler", "Advanced Sprinkler",
-    "Godly Sprinkler", "Master Sprinkler", "Medium Toy", "Medium Treat", "Magnifying Glass",
-    "Tanning Mirror", "Cleaning Spray", "Favorite Tool", "Harvest Tool", "Friendship Pot", "Grandmaster Sprinkler", "Levelup Lollipop"
-}
-
-local seedListRaw = {
-    "Carrot", "Strawberry", "Blueberry", "Orange Tulip", "Tomato", "Corn", "Daffodil", "Watermelon",
-    "Pumpkin", "Apple", "Bamboo", "Coconut", "Cactus", "Dragon Fruit", "Mango", "Grape", "Mushroom",
-    "Pepper", "Cacao", "Beanstalk", "Ember Lily", "Sugar Apple", "Burning Bud", "Giant Pinecone", "Elder Strawberry", "Romannesco"
-}
-
-local eggListRaw = {
-    "Common Egg", "Uncommon Egg", "Common Summer Egg", "Rare Summer Egg", "Rare Egg",  "Mythical Egg", "Legendary Egg", "Paradise Egg", "Bug Egg", "Bee Egg"
-}
-
-local function withAllOption(list)
-    local copy = table.clone(list)
-    table.insert(copy, 1, "All")
-    return copy
-end
-
--- 🪟 Fluent Window
 local Window = Fluent:CreateWindow({
-    Title = "Swiftz Hub",
-    SubTitle = "[ Grow a Graden ]",
+    Title = "HighZ Store"
+    SubTitle = "[ Beta Assist ]",
     TabWidth = 160,
     Size = UDim2.fromOffset(580, 460),
-    Acrylic = true,
-    Theme = "Black",
+    Acrylic = true, 
+    Theme = "Dark",
     MinimizeKey = Enum.KeyCode.LeftControl
 })
 
+
 local Tabs = {
     Main = Window:AddTab({ Title = "Main", Icon = "home" }),
-    Multi = Window:AddTab({ Title = "Multi", Icon = "target" }),
-    Shop = Window:AddTab({ Title = "Shop", Icon = "shopping-cart" }),
-    Visual = Window:AddTab({ Title = "Visual", Icon = "eye" }),
+    Esp = Window:AddTap({ Title = "Esp" , Icon = "close-eye" }),
+    Teleport = Window:AddTap({ Title = "Teleport" , Icon = "Line" }),
+    Visual = Window:AddTap({ Title = "Visual" , Icon = "Box" }), 
     Settings = Window:AddTab({ Title = "Settings", Icon = "settings" })
 }
 
 local Options = Fluent.Options
 
--- 🛍️ Multi Dropdowns สำหรับ Shop
-local gearDropdown = Tabs.Shop:AddDropdown("GearDropdown", {
-    Title = "Gears",
-    Values = withAllOption(gearListRaw),
-    Multi = true,
-    Default = {},
-})
+do
+    Fluent:Notify({
+        Title = "HighZ Store",
+        Content = "Yoooo notification",
+        SubContent = "SubContent", -- Optional
+        Duration = 5 -- Set to nil to make the notification not disappear
+    })
 
-local seedDropdown = Tabs.Shop:AddDropdown("SeedDropdown", {
-    Title = "Seeds",
-    Values = withAllOption(seedListRaw),
-    Multi = true,
-    Default = {},
-})
+    Tabs.Main:AddParagraph({
+        Title = "HighZ paragraph",
+        Content = "HighZ!!!!!!"
+    })
 
-local eggDropdown = Tabs.Shop:AddDropdown("EggDropdown", {
-    Title = "Eggs",
-    Values = withAllOption(eggListRaw),
-    Multi = true,
-    Default = {},
-})
 
--- 🔄 ระบบเปิดปิด Auto Buy
-local AutoBuyToggle = Tabs.Shop:AddToggle("AutoBuy", {
-    Title = "Auto Buy",
-    Default = false
-})
 
--- 🧠 ฟังก์ชันเลือกไอเทม
-local function getSelectedItems(dropdown, rawList)
-    local selected = {}
-    if dropdown.Value["All"] then
-        return rawList
-    end
-    for item, state in pairs(dropdown.Value) do
-        if state then
-            table.insert(selected, item)
+    Tabs.Main:AddButton({
+        Title = "Button",
+        Description = "Very important button",
+        Callback = function()
+            Window:Dialog({
+                Title = "Title",
+                Content = "This is a dialog",
+                Buttons = {
+                    {
+                        Title = "Confirm",
+                        Callback = function()
+                            print("Confirmed the dialog.")
+                        end
+                    },
+                    {
+                        Title = "Cancel",
+                        Callback = function()
+                            print("Cancelled the dialog.")
+                        end
+                    }
+                }
+            })
         end
-    end
-    return selected
+    })
+
+
+
+    local Toggle = Tabs.Main:AddToggle("MyToggle", {Title = "Toggle", Default = false })
+
+    Toggle:OnChanged(function()
+        print("Toggle changed:", Options.MyToggle.Value)
+    end)
+
+    Options.MyToggle:SetValue(false)
+
+
+    
+    local Slider = Tabs.Main:AddSlider("Slider", {
+        Title = "Slider",
+        Description = "This is a slider",
+        Default = 2,
+        Min = 0,
+        Max = 5,
+        Rounding = 1,
+        Callback = function(Value)
+            print("Slider was changed:", Value)
+        end
+    })
+
+    Slider:OnChanged(function(Value)
+        print("Slider changed:", Value)
+    end)
+
+    Slider:SetValue(3)
+
+
+
+    local Dropdown = Tabs.Main:AddDropdown("Dropdown", {
+        Title = "Dropdown",
+        Values = {"one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven", "twelve", "thirteen", "fourteen"},
+        Multi = false,
+        Default = 1,
+    })
+
+
+    Dropdown:SetValue("four")
+
+    Dropdown:OnChanged(function(Value)
+        print("Dropdown changed:", Value)
+    end)
+
+
+    
+    local MultiDropdown = Tabs.Main:AddDropdown("MultiDropdown", {
+        Title = "Dropdown",
+        Description = "You can select multiple values.",
+        Values = {"one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven", "twelve", "thirteen", "fourteen"},
+        Multi = true,
+        Default = {"seven", "twelve"},
+    })
+
+    MultiDropdown:SetValue({
+        three = true,
+        five = true,
+        seven = false
+    })
+
+    MultiDropdown:OnChanged(function(Value)
+        local Values = {}
+        for Value, State in next, Value do
+            table.insert(Values, Value)
+        end
+        print("Mutlidropdown changed:", table.concat(Values, ", "))
+    end)
+
+
+
+    local Colorpicker = Tabs.Main:AddColorpicker("Colorpicker", {
+        Title = "Colorpicker",
+        Default = Color3.fromRGB(96, 205, 255)
+    })
+
+    Colorpicker:OnChanged(function()
+        print("Colorpicker changed:", Colorpicker.Value)
+    end)
+    
+    Colorpicker:SetValueRGB(Color3.fromRGB(0, 255, 140))
+
+
+
+    local TColorpicker = Tabs.Main:AddColorpicker("TransparencyColorpicker", {
+        Title = "Colorpicker",
+        Description = "but you can change the transparency.",
+        Transparency = 0,
+        Default = Color3.fromRGB(96, 205, 255)
+    })
+
+    TColorpicker:OnChanged(function()
+        print(
+            "TColorpicker changed:", TColorpicker.Value,
+            "Transparency:", TColorpicker.Transparency
+        )
+    end)
+
+
+
+    local Keybind = Tabs.Main:AddKeybind("Keybind", {
+        Title = "KeyBind",
+        Mode = "Toggle", -- Always, Toggle, Hold
+        Default = "LeftControl", -- String as the name of the keybind (MB1, MB2 for mouse buttons)
+
+        
+        Callback = function(Value)
+            print("Keybind clicked!", Value)
+        end,
+
+        
+        ChangedCallback = function(New)
+            print("Keybind changed!", New)
+        end
+    })
+
+    
+    Keybind:OnClick(function()
+        print("Keybind clicked:", Keybind:GetState())
+    end)
+
+    Keybind:OnChanged(function()
+        print("Keybind changed:", Keybind.Value)
+    end)
+
+    task.spawn(function()
+        while true do
+            wait(1)
+
+
+                
+            local state = Keybind:GetState()
+            if state then
+                print("Keybind is being held down")
+            end
+
+            if Fluent.Unloaded then break end
+        end
+    end)
+
+    Keybind:SetValue("MB2", "Toggle") -- Sets keybind to MB2, mode to Hold
+
+
+    local Input = Tabs.Main:AddInput("Input", {
+        Title = "Input",
+        Default = "Default",
+        Placeholder = "Placeholder",
+        Numeric = false, -- Only allows numbers
+        Finished = false, -- Only calls callback when you press enter
+        Callback = function(Value)
+            print("Input changed:", Value)
+        end
+    })
+
+    Input:OnChanged(function()
+        print("Input updated:", Input.Value)
+    end)
 end
 
--- 🔁 รัน Auto Buy Loop
-task.spawn(function()
-    while true do
-        task.wait(0.5) -- ไม่มีดีเลย์เพื่อความเร็วสูงสุด
-        if AutoBuyToggle.Value then
-            -- ซื้อ Gear
-            for _, item in ipairs(getSelectedItems(gearDropdown, gearListRaw)) do
-                GearRemote:FireServer(item)
-            end
-            -- ซื้อ Seed
-            for _, item in ipairs(getSelectedItems(seedDropdown, seedListRaw)) do
-                SeedRemote:FireServer(item)
-            end
-            -- ซื้อ Egg
-            for _, item in ipairs(getSelectedItems(eggDropdown, eggListRaw)) do
-                EggRemote:FireServer(item)
-            end
-        end
-    end
-end)
 
--- ⚙️ SaveManager / Interface
+
 SaveManager:SetLibrary(Fluent)
 InterfaceManager:SetLibrary(Fluent)
+
+
 SaveManager:IgnoreThemeSettings()
+
+
 SaveManager:SetIgnoreIndexes({})
-InterfaceManager:SetFolder("ProjectSwiftz")
-SaveManager:SetFolder("ProjectSwiftz/GrowAGarden")
+
+
+InterfaceManager:SetFolder("FluentScriptHub")
+SaveManager:SetFolder("FluentScriptHub/specific-game")
+
 InterfaceManager:BuildInterfaceSection(Tabs.Settings)
 SaveManager:BuildConfigSection(Tabs.Settings)
-SaveManager:LoadAutoloadConfig()
+
+
 Window:SelectTab(1)
 
 Fluent:Notify({
-    Title = "Swiftz Hub",
-    Content = "Swiftz Loaded",
-    Duration = 6
+    Title = "Fluent",
+    Content = "The script has been loaded.",
+    Duration = 8
 })
+
+
+SaveManager:LoadAutoloadConfig()
