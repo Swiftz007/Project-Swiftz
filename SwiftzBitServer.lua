@@ -104,7 +104,7 @@ local Title = Instance.new("TextLabel", Main)
 Title.Size = UDim2.new(1, 0, 0, 40)
 Title.BackgroundTransparency = 1
 Title.Font = Enum.Font.GothamBold
-Title.Text = "Server Finder • Advanced"
+Title.Text = "Server Finder • Swiftz Hub"
 Title.TextSize = 26
 Title.TextColor3 = Color3.fromRGB(255,255,255)
 
@@ -297,7 +297,7 @@ local function StartFind()
 		local s = FetchOne()
 		if s then
 			SelectedServer = s
-			PText.Text = "Players: "..s.playing.." • Ping OK?"
+			PText.Text = "Players: "..s.playing..""
 			FadeIn(Popup)
 			return
 		end
