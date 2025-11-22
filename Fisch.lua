@@ -3,8 +3,8 @@ local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/d
 local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/InterfaceManager.lua"))()
 
 local Window = Fluent:CreateWindow({
-	Title = "Naoki Hub",
-	SubTitle = "discord.gg/25ms",
+	Title = "Swiftz Hub",
+	SubTitle = "[ Fisch Project ]",
 	TabWidth = 160,
 	Size = UDim2.fromOffset(550, 350),
 	Acrylic = false, 
@@ -56,7 +56,7 @@ end
 
 function Notify(Des, Time, title)
 	Fluent:Notify({
-		Title= title or "Normal Hub Notify",
+		Title= title or "Swiftz Hub Notify",
 		Content = Des,
 		Duration = Time or 3
 	})
@@ -77,7 +77,7 @@ _G['Normal Hub Table'] = {
 	AnimationUiToggle = true,
 }
 
-_G['Normal Hub Table'].SizeUi = (not _G['Normal Hub Table'].isWindows and UDim2.fromOffset(600,300)) or UDim2.fromOffset(560,600)
+_G['Swiftz Hub Table'].SizeUi = (not _G['Swiftz Hub Table'].isWindows and UDim2.fromOffset(600,300)) or UDim2.fromOffset(560,600)
 if not _G['Normal Hub Table'].isWindows then
 	if game.CoreGui:FindFirstChild('UIBUTTON') then
 		game.CoreGui:FindFirstChild('UIBUTTON'):Destroy()
@@ -4174,7 +4174,7 @@ do
 			writefile(tostring(LocalPlayer.UserId).."ALC.txt", tostring(v))
 		end)
 		Settings_M:AddButton({
-			Title = "Join Normal Hub Discord",
+			Title = "Swiftz Hub discord",
 			Description = "Click to join",
 			Callback = function()
 
@@ -4192,11 +4192,11 @@ do
 
 
 	InterfaceManager:SetLibrary(Fluent)
-	InterfaceManager:SetFolder("Normal Hub")
+	InterfaceManager:SetFolder("Swiftz Hub")
 	InterfaceManager:BuildInterfaceSection(Tap.Settings)
 	Window:SelectTab(1)
 	SaveManager:LoadAutoloadConfig()
-	Fluent:SetTheme("Normal Theme")
+	Fluent:SetTheme("Swiftz Theme")
 	setfflag("TaskSchedulerTargetFps", "1000")
 setfpscap(120)
 while true do
@@ -4205,4 +4205,5 @@ while true do
     end
     wait(0)
 end
+
 end
