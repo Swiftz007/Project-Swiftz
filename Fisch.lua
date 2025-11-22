@@ -1,4 +1,4 @@
-local Fluent = loadstring(game:HttpGet("https://raw.githubusercontent.com/Knuxy92/Ui-linoria/main/Fluent/Fluent.lua"))()
+local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
 local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/SaveManager.lua"))()
 local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/InterfaceManager.lua"))()
 
@@ -8,7 +8,7 @@ local Window = Fluent:CreateWindow({
 	TabWidth = 160,
 	Size = UDim2.fromOffset(550, 350),
 	Acrylic = false, 
-	Theme = "Normal Theme",
+	Theme = "Swiftz Theme",
 	MinimizeKey = Enum.KeyCode.LeftControl
 })
 
@@ -186,7 +186,7 @@ UICorner.Parent = ImageButton
 end
 
 do -- Settings Initializer
-	local path = "Normal Hub/fisch"
+	local path = "Swiftz Hub/fisch"
 	if not isfolder(path) then makefolder(path) end
 	DefaultConfigName = path.."/OriConfibg.json"
 	ConfigName = path.."/"..Client.UserId.."Config.json"
@@ -240,14 +240,14 @@ end
 
 do -- Config Function
 	save = function()
-		if not isfolder('Normal Hub') then
-			makefolder('Normal Hub')
+		if not isfolder('Swiftz Hub') then
+			makefolder('Swiftz Hub')
 		end
 		writefile(ConfigName,game:GetService("HttpService"):JSONEncode(Config))
 	end
 	setDefaultConfig = function()
-		if not isfolder('Normal Hub') then
-			makefolder('Normal Hub')
+		if not isfolder('Swiftz Hub') then
+			makefolder('Swiftz Hub')
 		end
 		writefile(DefaultConfigName,game:GetService("HttpService"):JSONEncode(Config))
 	end
@@ -4207,3 +4207,4 @@ while true do
 end
 
 end
+
