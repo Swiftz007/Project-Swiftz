@@ -1,3 +1,15 @@
+local Players = game:GetService("Players")
+local player = Players.LocalPlayer
+
+local correctKey = "KEY-123-456-789"
+
+if getgenv().Key ~= correctKey then
+    player:Kick("Key ไม่ถูกต้อง")
+    return
+end
+
+print("Key ถูกต้อง โหลดสำเร็จ")
+
 -- Check PlaceId
 local allowedPlaceId = 136801880565837
 
