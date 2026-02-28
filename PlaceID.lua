@@ -2,23 +2,31 @@ local Players = game:GetService("Players")
 local player = Players.LocalPlayer
 
 local correctKey = "KEY-123-456-789"
+local key = getgenv().Key
 
-if getgenv().Key ~= correctKey then
+-- 🔐 Key Check
+if not key or key ~= correctKey then
+    warn("Swiftz Hub")
     player:Kick("Invalid Hwid")
-     print("[Swiftz Hub]")
     return
 end
 
 print("Swiftz Hub better Script Forever")
-   task.wait(1)
+task.wait(1)
 
--- Check PlaceId
+-- 🗺️ Check PlaceId
 local allowedPlaceId = 136801880565837
 
 if game.PlaceId ~= allowedPlaceId then
-    game.Players.LocalPlayer:Kick("Not found map : Swiftz Hub")
+    player:Kick("Not found map : Swiftz Hub")
     return
 end
 
--- Script Flick
-loadstring(game:HttpGet("https://raw.githubusercontent.com/AsiiXacx/AcxScripter/refs/heads/main/FlickAcxV1.3"))()
+-- 🚀 Load Script
+local success, err = pcall(function()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/AsiiXacx/AcxScripter/refs/heads/main/FlickAcxV1.3"))()
+end)
+
+if not success then
+    warn("[Swiftz Hub] Load Error:", err)
+end
