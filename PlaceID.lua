@@ -4,11 +4,12 @@ local player = Players.LocalPlayer
 local correctKey = "KEY-123-456-789"
 
 if getgenv().Key ~= correctKey then
-    player:Kick("Key ไม่ถูกต้อง")
+    player:Kick("[Swiftz Hub],Invalid Hwid")
     return
 end
 
-print("Key ถูกต้อง โหลดสำเร็จ")
+print("Swiftz Hub better Script Forever")
+   task.wait(1)
 
 -- Check PlaceId
 local allowedPlaceId = 136801880565837
