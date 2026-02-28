@@ -4,7 +4,8 @@ local player = Players.LocalPlayer
 local correctKey = "KEY-123-456-789"
 
 if getgenv().Key ~= correctKey then
-    player:Kick("[Swiftz Hub],Invalid Hwid")
+    player:Kick("Invalid Hwid")
+     print("[Swiftz Hub]")
     return
 end
 
