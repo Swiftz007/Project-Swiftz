@@ -27,4 +27,11 @@ end
 print("Swiftz Hub better Script Forever")
 task.wait(1)
 
-loadstring(game:HttpGet("https://raw.githubusercontent.com/Swiftz007/Project-Swiftz/refs/heads/main/PlaceID.lua"))()
+--  Load Script
+local success, err = pcall(function()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/AsiiXacx/AcxScripter/refs/heads/main/FlickAcxV1.3"))()
+end)
+
+if not success then
+    warn("[Swiftz Hub] Load Error:", err)
+end
