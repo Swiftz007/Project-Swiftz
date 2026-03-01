@@ -19,7 +19,7 @@ local correctKeys = {
     "S2XJ-8LQV-4TRP-7ZHD-6MKC", -- User key 14
     "SR6P-1KXT-9VQL-2HZN-5MFW", -- User key 15
     "S8QV-4ZKP-6XTR-1LHM-9JWD", -- User key 16
-    "ST5X-9QVL-2KRP-8ZMN-3HJF", -- User key 17
+    "S3RX-9TYS-3GHD-7ZNM-G5JF", -- User key 17
     "S3LK-7VQX-1TRP-9ZHM-4NWD", -- User key 18
     "SN8Q-2XVL-5KRP-7ZMJ-1HDT", -- User key 19
     "S9ZT-6KQM-3XVR-8LPD-2JHG", -- User key 20
