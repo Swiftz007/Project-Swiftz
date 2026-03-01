@@ -29,9 +29,8 @@ task.wait(1)
 
 --  Load Script
 local success, err = pcall(function()
-    loadstring(game:HttpGet("https://raw.githubusercontent.com/AsiiXacx/AcxScripter/refs/heads/main/FlickAcxV1.3"))()
-end)
-
+       loadstring(game:HttpGet("https://raw.githubusercontent.com/Swiftz007/Project-Swiftz/refs/heads/main/PlaceID.lua"))()
+    end
 if not success then
     warn("[Swiftz Hub] Load Error:", err)
 end
