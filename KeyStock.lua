@@ -26,3 +26,5 @@ end
 
 print("Swiftz Hub better Script Forever")
 task.wait(1)
+
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Swiftz007/Project-Swiftz/refs/heads/main/PlaceID.lua"))()
