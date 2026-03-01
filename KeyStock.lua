@@ -12,7 +12,7 @@ local correctKeys = {
     "S2XK-9LQV-4TRP-7ZHD-6MJN", -- User key 7
     "SR7P-3KXT-9VQL-2HZN-5MFW", -- User key 8
     "S8QV-1ZKP-6XTR-4LHM-9JWD", -- User key 9
-    "ST5X-9QVL-2KRP-8ZMN-3HJF" -- User key 10
+    "ST5X-9QVL-2KRP-8ZMN-3HJF", -- User key 10
     "SX4K-9QTL-2VHM-8RWP-6JND", -- User key 11
     "SX4K-9QTL-2VHM-8RWP-6JND", -- User key 11
     "S7MP-3XQV-9LKT-2HZR-5WNF", -- User key 12
@@ -33,7 +33,7 @@ local correctKeys = {
     "S5LK-9VQX-2TRP-8ZHM-4NWD", -- User key 27
     "SN3Q-6XVL-1KRP-7ZMJ-9HDT", -- User key 28
     "S9RT-4KQM-8XVL-2LPD-6JHG", -- User key 29
-    "SX7P-5QVL-3KRT-1ZMN-8HJD", -- User key 30
+    "SX7P-5QVL-3KRT-1ZMN-8HJD" -- User key 30
 }
 
 local key = getgenv().Key
