@@ -1,8 +1,7 @@
 local Players = game:GetService("Players")
 local player = Players.LocalPlayer
 
-local correctKey = {
-    "KEY-123-456-789"
+local correctKeys = {
     "S9KX-4TQ7-2MZL-8PWR-6HJD",
     "SB3F-7XQ2-L9VN-5KTR-1ZPM",
     "S7DL-2QWX-8VJN-4RKP-9TGH",
@@ -17,20 +16,35 @@ local correctKey = {
 
 local key = getgenv().Key
 
---  Key Check
-if not key or key ~= correctKey then
-    warn("Swiftz Hub")
-    player:Kick("Invalid Hwid")
+-- ตรวจว่ามีคีย์หรือไม่
+if not key then
+    player:Kick("Please set getgenv().Key first")
     return
 end
 
-print("Swiftz Hub better Script Forever")
-task.wait(1)
-
---  Load Script
-local success, err = pcall(function()
-       loadstring(game:HttpGet("https://raw.githubusercontent.com/Swiftz007/Project-Swiftz/refs/heads/main/PlaceID.lua"))()
+-- ฟังก์ชันเช็คคีย์
+local function isValidKey(k)
+    for _, v in ipairs(correctKeys) do
+        if k == v then
+            return true
+        end
     end
+    return false
+end
+
+if not isValidKey(key) then
+    player:Kick("Invalid Key")
+    return
+end
+
+print("Key verified! Loading main script...")
+task.wait(0.5)
+
+-- โหลด PlaceID.lua
+local success, err = pcall(function()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/Swiftz007/Project-Swiftz/refs/heads/main/PlaceID.lua"))()
+end)
+
 if not success then
     warn("[Swiftz Hub] Load Error:", err)
 end
