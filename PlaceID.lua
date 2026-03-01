@@ -1,20 +1,3 @@
-local Players = game:GetService("Players")
-local player = Players.LocalPlayer
-
-local correctKey = "SWFX-7UX3-2A61-G5QL-B4JK" -- User Key
-local correctKey = "KEY-123-456-789" -- Admin Key
-local key = getgenv().Key
-
---  Key Check
-if not key or key ~= correctKey then
-    warn("Swiftz Hub")
-    player:Kick("Invalid Hwid")
-    return
-end
-
-print("Swiftz Hub better Script Forever")
-task.wait(1)
-
 --  Check PlaceId
 local allowedPlaceId = 136801880565837
 
