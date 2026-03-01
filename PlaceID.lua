@@ -1,10 +1,11 @@
 local Players = game:GetService("Players")
 local player = Players.LocalPlayer
 
-local correctKey = "KEY-123-456-789"
+local correctKey = "SWFX-7UX3-2A61-G5QL-B4JK" -- User Key
+local correctKey = "KEY-123-456-789" -- Admin Key
 local key = getgenv().Key
 
--- 🔐 Key Check
+--  Key Check
 if not key or key ~= correctKey then
     warn("Swiftz Hub")
     player:Kick("Invalid Hwid")
@@ -14,7 +15,7 @@ end
 print("Swiftz Hub better Script Forever")
 task.wait(1)
 
--- 🗺️ Check PlaceId
+--  Check PlaceId
 local allowedPlaceId = 136801880565837
 
 if game.PlaceId ~= allowedPlaceId then
@@ -22,7 +23,7 @@ if game.PlaceId ~= allowedPlaceId then
     return
 end
 
--- 🚀 Load Script
+--  Load Script
 local success, err = pcall(function()
     loadstring(game:HttpGet("https://raw.githubusercontent.com/AsiiXacx/AcxScripter/refs/heads/main/FlickAcxV1.3"))()
 end)
