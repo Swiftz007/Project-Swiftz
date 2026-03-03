@@ -32,7 +32,27 @@ local correctKeys = {
     "S5LK-9VQX-2TRP-8ZHM-4NWD", -- User key 27
     "SN3Q-6XVL-1KRP-7ZMJ-9HDT", -- User key 28
     "S9RT-4KQM-8XVL-2LPD-6JHG", -- User key 29
-    "SX7P-5QVL-3KRT-1ZMN-8HJD" -- User key 30
+    "SX7P-5QVL-3KRT-1ZMN-8HJD", -- User key 30
+    "S7KP-4ZXL-9QRT-2VMN-8HJD", -- User key 31
+    "S3ZT-8LXM-1KPV-6QNR-4HWF", -- User key 32
+    "S9LX-2QKP-7ZTR-5VMN-1HJD", -- User key 33
+    "S5RV-1ZXL-8QKT-3PMN-7HFD", -- User key 34
+    "S2KP-9LZT-4XRV-8QMN-6HJD", -- User key 35
+    "S8ZX-3KLP-6QRT-1VMN-9HWF", -- User key 36
+    "S4QL-7ZKP-2XRT-9VMN-5HJD", -- User key 37
+    "S1ZT-6KXP-8QRL-4VMN-3HFD", -- User key 38
+    "S6KP-2ZXL-5QRT-7VMN-8HJD", -- User key 39
+    "S9ZX-4KLP-1QRT-6VMN-2HWF", -- User key 40
+    "S3KP-8ZXL-7QRT-5VMN-1HJD", -- User key 41
+    "S7ZT-2KXP-9QRL-4VMN-6HFD", -- User key 42
+    "S5KP-1ZXL-8QRT-3VMN-9HJD", -- User key 43
+    "S2ZX-6KLP-4QRT-7VMN-8HWF", -- User key 44
+    "S8KP-3ZXL-1QRT-9VMN-5HJD", -- User key 45
+    "S4ZT-7KXP-6QRL-2VMN-1HFD", -- User key 46
+    "S1KP-9ZXL-5QRT-8VMN-3HJD", -- User key 47
+    "S6ZX-2KLP-7QRT-4VMN-9HWF", -- User key 48
+    "S9KP-5ZXL-3QRT-1VMN-8HJD", -- User key 49
+    "S7ZX-4KLP-2QRT-6VMN-5HFD"  -- User key 50
 }
 
 local key = getgenv().Key
