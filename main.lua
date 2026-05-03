@@ -1,3 +1,4 @@
+-- #1 add reaper theme
 local a, b = {
     {
         1,
@@ -11,7 +12,8 @@ local a, b = {
                 "ModuleScript",
                 {"Themes"},
                 {
-                    {50, "ModuleScript", {"Dark"}},
+			        {54, "ModuleScript", {"Reaper"}},
+			        {50, "ModuleScript", {"Dark"}},
                     {52, "ModuleScript", {"Light"}},
                     {51, "ModuleScript", {"Darker"}},
                     {53, "ModuleScript", {"Rose"}},
@@ -5289,7 +5291,47 @@ local aa = {
             Hover = Color3.fromRGB(200, 120, 170),
             HoverChange = 0.04
         }
-    end
+    end,
+    [54] = function()
+        local aa, ab, ac, ad, ae = b(54)
+        return {
+        Name = "Reaper",
+        Accent = Color3.fromRGB(180, 40, 40),
+        AcrylicMain = Color3.fromRGB(30, 30, 30),
+        AcrylicBorder = Color3.fromRGB(60, 60, 60),
+        AcrylicGradient = ColorSequence.new(Color3.fromRGB(40, 40, 40),  Color3.fromRGB(25, 25, 25)),
+        AcrylicNoise = 0.97,
+        TitleBarLine = Color3.fromRGB(80, 80, 80),
+        Tab = Color3.fromRGB(170, 50, 50),
+        Element = Color3.fromRGB(35, 35, 35),
+        ElementBorder = Color3.fromRGB(70, 70, 70),
+        InElementBorder = Color3.fromRGB(90, 90, 90),
+        ElementTransparency = 0.6,
+        ToggleSlider = Color3.fromRGB(50, 50, 50),
+        ToggleToggled = Color3.fromRGB(200, 60, 60),
+        SliderRail = Color3.fromRGB(60, 60, 60),
+        DropdownFrame = Color3.fromRGB(30, 30, 30),
+        DropdownHolder = Color3.fromRGB(40, 40, 40),
+        DropdownBorder = Color3.fromRGB(80, 80, 80),
+        DropdownOption = Color3.fromRGB(200, 80, 80),
+        Keybind = Color3.fromRGB(180, 60, 60),
+        Input = Color3.fromRGB(40, 40, 40),
+        InputFocused = Color3.fromRGB(200, 70, 70),
+        InputIndicator = Color3.fromRGB(180, 50, 50),
+        Dialog = Color3.fromRGB(35, 35, 35),
+        DialogHolder = Color3.fromRGB(45, 45, 45),
+        DialogHolderLine = Color3.fromRGB(70, 70, 70),
+        DialogButton = Color3.fromRGB(40, 40, 40),
+        DialogButtonBorder = Color3.fromRGB(90, 90, 90),
+        DialogBorder = Color3.fromRGB(120, 120, 120),
+        DialogInput = Color3.fromRGB(50, 50, 50),
+        DialogInputLine = Color3.fromRGB(120, 120, 120),
+        Text = Color3.fromRGB(255, 255, 255),
+        SubText = Color3.fromRGB(180, 180, 180),
+        Hover = Color3.fromRGB(200, 60, 60),
+        HoverChange = 0.14
+    }
+end
 }
 do
     local ab, ac, ad, ae, af, ag, ah, aj, c, e, f, g, h, i, j, k =
