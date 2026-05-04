@@ -1,4 +1,4 @@
--- #Fix Color Reaper 5
+-- #Fix Color Reaper 6
 local a, b = {
     {
         1,
@@ -5056,7 +5056,7 @@ local aa = {
     end,
     [47] = function()
         local aa, ab, ac, ad, ae = b(47)
-        local af = {Names = {"Dark", "Darker", "Light", "Aqua", "Amethyst", "Reaper"}}
+        local af = {Names = {"Reaper", "Dark", "Darker", "Light", "Aqua", "Amethyst"}}
         for ag, ah in next, ab:GetChildren() do
             local aj = ac(ah)
             af[aj.Name] = aj
