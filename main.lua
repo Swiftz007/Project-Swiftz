@@ -1,4 +1,4 @@
--- #Fix Color Reaper 6
+-- #Fix Color Reaper 7
 local a, b = {
     {
         1,
@@ -5268,7 +5268,7 @@ local aa = {
 			InElementBorder = Color3.fromRGB(85, 60, 60),	
 			ElementTransparency = 0.6,		
 			ToggleSlider = Color3.fromRGB(55, 55, 55),
-			ToggleToggled = Color3.fromRGB(185, 85, 85),
+			ToggleToggled = Color3.fromRGB(255, 255, 255),
 			SliderRail = Color3.fromRGB(60, 45, 45),
 			DropdownFrame = Color3.fromRGB(28, 22, 22),
 			DropdownHolder = Color3.fromRGB(38, 30, 30),
