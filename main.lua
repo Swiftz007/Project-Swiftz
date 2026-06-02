@@ -1,4 +1,4 @@
--- #Fix Color Reaper 8
+-- #Fix Color Reaper 9
 local a, b = {
     {
         1,
@@ -18,7 +18,8 @@ local a, b = {
                     {53, "ModuleScript", {"Reaper"}},
                     {49, "ModuleScript", {"Aqua"}},
                     {48, "ModuleScript", {"Amethyst"}},
-					{54, "ModuleScript", {"Emerald"}}
+					{54, "ModuleScript", {"Emerald"}},
+                    {55, "ModuleScript", {"ExtremeReaper"}}
                 }
             },
             {
@@ -5057,7 +5058,7 @@ local aa = {
     end,
     [47] = function()
         local aa, ab, ac, ad, ae = b(47)
-        local af = {Names = {"Reaper", "Emerald", "Dark", "Darker", "Light", "Aqua", "Amethyst"}}
+        local af = {Names = {"Reaper", "ExtremeReaper", "Emerald", "Dark", "Darker", "Light", "Aqua", "Amethyst"}}
         for ag, ah in next, ab:GetChildren() do
             local aj = ac(ah)
             af[aj.Name] = aj
@@ -5332,7 +5333,48 @@ local aa = {
             Hover = Color3.fromRGB(35, 45, 35),
             HoverChange = 0.05
         }
+    end,
+    [55] = function()
+        local aa, ab, ac, ad, ae = b(55)
+        return {
+            Name = "ExtremeReaper",
+            Accent = Color3.fromRGB(220, 40, 40), -- แดงสดกว่าเดิม
+            AcrylicMain = Color3.fromRGB(10, 5, 5), -- มืดเกือบสนิท
+            AcrylicBorder = Color3.fromRGB(100, 20, 20),
+            AcrylicGradient = ColorSequence.new(Color3.fromRGB(25, 10, 10), Color3.fromRGB(10, 5, 5)),
+            AcrylicNoise = 1,
+            TitleBarLine = Color3.fromRGB(120, 30, 30),
+            Tab = Color3.fromRGB(255, 60, 60),
+            Element = Color3.fromRGB(18, 10, 10), -- พื้นหลัง Element ที่เข้มข้น
+            ElementBorder = Color3.fromRGB(70, 20, 20), -- ขอบ Element ที่เน้นความเข้ม
+            InElementBorder = Color3.fromRGB(110, 30, 30),
+            ElementTransparency = 0, -- ปิดความโปร่งใสเพื่อให้ขอบดูคม
+            ToggleSlider = Color3.fromRGB(50, 15, 15),
+            ToggleToggled = Color3.fromRGB(255, 255, 255),
+            SliderRail = Color3.fromRGB(60, 20, 20),
+            DropdownFrame = Color3.fromRGB(20, 10, 10),
+            DropdownHolder = Color3.fromRGB(30, 15, 15),
+            DropdownBorder = Color3.fromRGB(120, 30, 30),
+            DropdownOption = Color3.fromRGB(220, 40, 40),
+            Keybind = Color3.fromRGB(180, 40, 40),
+            Input = Color3.fromRGB(25, 12, 12),
+            InputFocused = Color3.fromRGB(40, 15, 15),
+            InputIndicator = Color3.fromRGB(220, 40, 40),
+            Dialog = Color3.fromRGB(15, 5, 5),
+            DialogHolder = Color3.fromRGB(25, 10, 10),
+            DialogHolderLine = Color3.fromRGB(120, 30, 30),
+            DialogButton = Color3.fromRGB(35, 15, 15),
+            DialogButtonBorder = Color3.fromRGB(150, 40, 40),
+            DialogBorder = Color3.fromRGB(180, 30, 30),
+            DialogInput = Color3.fromRGB(30, 15, 15),
+            DialogInputLine = Color3.fromRGB(220, 40, 40),
+            Text = Color3.fromRGB(255, 240, 240), -- ตัวหนังสือขาวอมชมพูนิดๆ
+            SubText = Color3.fromRGB(200, 150, 150),
+            Hover = Color3.fromRGB(255, 40, 40),
+            HoverChange = 0.15
+        }
     end
+
   
 }
 do
