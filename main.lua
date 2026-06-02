@@ -1,4 +1,4 @@
--- #Fix Color Reaper 9
+-- #Fix Color Reaper 10
 local a, b = {
     {
         1,
@@ -123,7 +123,7 @@ local aa = {
             Window = nil,
             WindowFrame = nil,
             Unloaded = false,
-            Theme = "Dark",
+            Theme = "Reaper",
             DialogOpen = false,
             UseAcrylic = false,
             Acrylic = false,
