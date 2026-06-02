@@ -1,4 +1,4 @@
--- #Fix Color Reaper 7
+-- #Fix Color Reaper 8
 local a, b = {
     {
         1,
@@ -17,7 +17,8 @@ local a, b = {
                     {51, "ModuleScript", {"Darker"}},
                     {53, "ModuleScript", {"Reaper"}},
                     {49, "ModuleScript", {"Aqua"}},
-                    {48, "ModuleScript", {"Amethyst"}}
+                    {48, "ModuleScript", {"Amethyst"}},
+					{54, "ModuleScript", {"Emerald"}}
                 }
             },
             {
@@ -5056,7 +5057,7 @@ local aa = {
     end,
     [47] = function()
         local aa, ab, ac, ad, ae = b(47)
-        local af = {Names = {"Reaper", "Dark", "Darker", "Light", "Aqua", "Amethyst"}}
+        local af = {Names = {"Reaper", "Emerald", "Dark", "Darker", "Light", "Aqua", "Amethyst"}}
         for ag, ah in next, ab:GetChildren() do
             local aj = ac(ah)
             af[aj.Name] = aj
@@ -5291,7 +5292,48 @@ local aa = {
 			Hover = Color3.fromRGB(185, 85, 85),
 			HoverChange = 0.12
         }
+    end,
+    [54] = function()
+        local aa, ab, ac, ad, ae = b(54)
+        return {
+            Name = "Emerald",
+            Accent = Color3.fromRGB(46, 204, 113),
+            AcrylicMain = Color3.fromRGB(15, 18, 15),
+            AcrylicBorder = Color3.fromRGB(35, 50, 35),
+            AcrylicGradient = ColorSequence.new(Color3.fromRGB(20, 35, 20), Color3.fromRGB(10, 15, 10)),
+            AcrylicNoise = 0.95,
+            TitleBarLine = Color3.fromRGB(40, 70, 40),
+            Tab = Color3.fromRGB(100, 180, 100),
+            Element = Color3.fromRGB(25, 30, 25),
+            ElementBorder = Color3.fromRGB(40, 50, 40),
+            InElementBorder = Color3.fromRGB(60, 80, 60),
+            ElementTransparency = 0.85,
+            ToggleSlider = Color3.fromRGB(40, 60, 40),
+            ToggleToggled = Color3.fromRGB(255, 255, 255),
+            SliderRail = Color3.fromRGB(30, 45, 30),
+            DropdownFrame = Color3.fromRGB(25, 35, 25),
+            DropdownHolder = Color3.fromRGB(20, 25, 20),
+            DropdownBorder = Color3.fromRGB(40, 60, 40),
+            DropdownOption = Color3.fromRGB(46, 204, 113),
+            Keybind = Color3.fromRGB(35, 45, 35),
+            Input = Color3.fromRGB(25, 30, 25),
+            InputFocused = Color3.fromRGB(30, 50, 30),
+            InputIndicator = Color3.fromRGB(46, 204, 113),
+            Dialog = Color3.fromRGB(20, 25, 20),
+            DialogHolder = Color3.fromRGB(15, 20, 15),
+            DialogHolderLine = Color3.fromRGB(35, 50, 35),
+            DialogButton = Color3.fromRGB(30, 40, 30),
+            DialogButtonBorder = Color3.fromRGB(45, 65, 45),
+            DialogBorder = Color3.fromRGB(40, 70, 40),
+            DialogInput = Color3.fromRGB(25, 35, 25),
+            DialogInputLine = Color3.fromRGB(46, 204, 113),
+            Text = Color3.fromRGB(230, 255, 230),
+            SubText = Color3.fromRGB(150, 180, 150),
+            Hover = Color3.fromRGB(35, 45, 35),
+            HoverChange = 0.05
+        }
     end
+  
 }
 do
     local ab, ac, ad, ae, af, ag, ah, aj, c, e, f, g, h, i, j, k =
