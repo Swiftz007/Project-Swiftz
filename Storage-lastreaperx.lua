@@ -1,4 +1,4 @@
--- 🔥🔥🔥🔥2
+-- 🔥🔥🔥🔥3
 
 local HttpService = game:GetService("HttpService")
 local TweenService = game:GetService("TweenService")
@@ -42,21 +42,27 @@ end
 local TARGET_PLACE_ID = 93978595733734
 
 local function RunMainScript()
+    -- 1. รันสคริปต์หลักแยกตามเกม (PlaceID หรือเกมปกติ)
     if game.PlaceId == TARGET_PLACE_ID then
-        loadstring(game:HttpGet("https://raw.githubusercontent.com/x2sxqz/Violence-District/refs/heads/main/test1.lua"))()
-        return
-    end
-
-    if _G.Script_Language == "Thai" then
-        loadstring(game:HttpGet("https://raw.githubusercontent.com/x2sxqz/Normal/refs/heads/main/Thaixyz.lua"))()
+        pcall(function()
+            loadstring(game:HttpGet("https://raw.githubusercontent.com/x2sxqz/Violence-District/refs/heads/main/test1.lua"))()
+        end)
     else
-        loadstring(game:HttpGet("https://raw.githubusercontent.com/x2sxqz/Normal/refs/heads/main/kingxyz.lua"))()
+        pcall(function()
+            if _G.Script_Language == "Thai" then
+                loadstring(game:HttpGet("https://raw.githubusercontent.com/x2sxqz/Normal/refs/heads/main/Thaixyz.lua"))()
+            else
+                loadstring(game:HttpGet("https://raw.githubusercontent.com/x2sxqz/Normal/refs/heads/main/kingxyz.lua"))()
+            end
+        end)
     end
     
+    -- 2. Webhook ทำงานต่อ 100% ในทุกกรณี ไม่ว่าสคริปต์บนจะผ่านหรือติดปัญหาอะไร
     task.wait(0.1)
-    loadstring(game:HttpGet("https://raw.githubusercontent.com/x2sxqz/Libwtf/refs/heads/main/libwebhook2.lua"))()
+    pcall(function()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/x2sxqz/Libwtf/refs/heads/main/libwebhook2.lua"))()
+    end)
 end
-
 
 local API = {}
 
@@ -761,3 +767,4 @@ if keyToCheck then
 end
 
 Build()
+
