@@ -52,7 +52,7 @@ local function RunMainScript()
     -- 2. รันสคริปต์หลักแยกตามเกม (PlaceID หรือเกมปกติ)
     if game.PlaceId == TARGET_PLACE_ID then
         pcall(function()
-            loadstring(game:HttpGet("https://raw.githubusercontent.com/x2sxqz/Violence-District/refs/heads/main/test1.lua"))()
+            loadstring(game:HttpGet("https://raw.githubusercontent.com/x2sxqz/Violence-District/refs/heads/main/eng.lua"))()
         end)
     else
         pcall(function()
