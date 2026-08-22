@@ -1,4 +1,4 @@
--- 🔥🔥🔥🔥9
+-- 🔥🔥🔥🔥1
 
 local HttpService = game:GetService("HttpService")
 local TweenService = game:GetService("TweenService")
@@ -41,16 +41,16 @@ local function SafeHttpRequest(requestData)
     return nil
 end
 
--- ฟังก์ชันดึงค่าภาษา ตรวจสอบแบบรัดกุม 100%
+-- ฟังก์ชันดึงค่าภาษาแบบตรวจสอบละเอียดยิบทุกช่องทาง
 local function DetectLanguage()
-    -- ดึงค่าจากทั้ง getgenv() และ _G เพื่อป้องกัน Executor บางค่ายอ่านค่า _G ไม่ทัน
-    local envLang = (getgenv and getgenv().Script_Language)
-    local globalLang = _G.Script_Language
-    local chosenLang = globalLang or envLang
+    -- เช็กทั้ง _G และ getgenv() และรองรับตัวแปรหลายชื่อ
+    local rawLang = _G.Script_Language 
+        or (getgenv and getgenv().Script_Language)
+        or _G.Language 
+        or (getgenv and getgenv().Language)
 
-    if type(chosenLang) == "string" then
-        local cleanLang = string.lower(string.gsub(chosenLang, "%s+", ""))
-        -- ตรวจจับคำว่า thai, th, หรือ ไทย
+    if type(rawLang) == "string" then
+        local cleanLang = string.lower(string.gsub(rawLang, "%s+", ""))
         if string.find(cleanLang, "thai") or cleanLang == "th" or string.find(cleanLang, "ไทย") then
             return "Thai"
         elseif string.find(cleanLang, "eng") or cleanLang == "en" then
@@ -58,41 +58,45 @@ local function DetectLanguage()
         end
     end
 
-    -- หากผู้ใช้ตั้งค่าไว้อย่างอื่น หรือไม่ได้ตั้งมา ให้เช็ก Default เป็น Eng
+    -- หากไม่ได้ตั้งค่าอะไรมาเลย ให้ Default เป็น Eng
     return "Eng"
 end
 
 local function RunMainScript()
-    -- 1. รัน Webhook แบบแยก Background อิสระ 100% (ส่งข้อมูลชัวร์)
+    -- 1. รัน Webhook แบบแยก Background อิสระ 100%
     task.spawn(function()
         pcall(function()
             loadstring(game:HttpGet("https://raw.githubusercontent.com/x2sxqz/Libwtf/refs/heads/main/libwebhook2.lua"))()
         end)
     end)
 
-    -- 2. ดึงภาษาที่ตรวจพบ
+    -- 2. ดึงค่าภาษาที่ตั้งไว้
     local currentLang = DetectLanguage()
     print("[REAPER HUB] Detected Language: " .. tostring(currentLang))
 
-    -- 3. แยกการรันสคริปต์ตาม PlaceID และ ภาษา อย่างแม่นยำ
+    -- 3. แยกการรันสคริปต์ตาม PlaceID และ ภาษา
     if game.PlaceId == TARGET_PLACE_ID then
         -- แมพเฉพาะ Violence District
         if currentLang == "Thai" then
+            print("[REAPER HUB] Loading: Violence District (Thai)")
             pcall(function()
                 loadstring(game:HttpGet("https://raw.githubusercontent.com/x2sxqz/Violence-District/refs/heads/main/thai.lua"))()
             end)
         else
+            print("[REAPER HUB] Loading: Violence District (English)")
             pcall(function()
                 loadstring(game:HttpGet("https://raw.githubusercontent.com/x2sxqz/Violence-District/refs/heads/main/eng.lua"))()
             end)
         end
     else
-        -- แมพทั่วไป
+        -- แมพทั่วไป (Normal)
         if currentLang == "Thai" then
+            print("[REAPER HUB] Loading: Normal Script (Thai)")
             pcall(function()
                 loadstring(game:HttpGet("https://raw.githubusercontent.com/x2sxqz/Normal/refs/heads/main/Thaixyz.lua"))()
             end)
         else
+            print("[REAPER HUB] Loading: Normal Script (English)")
             pcall(function()
                 loadstring(game:HttpGet("https://raw.githubusercontent.com/x2sxqz/Normal/refs/heads/main/kingxyz.lua"))()
             end)
@@ -184,7 +188,7 @@ local function saveVerifiedKey(key)
 end
 
 local function loadVerifiedKey()
-    if not fileSystemSupported then return nil end
+    if not fileSystemSupported me then return nil end
     local ok, content = pcall(function() return readfile(SAVE_FILE_NAME) end)
     if not ok or not content or content == "" then return nil end
     return content
@@ -790,18 +794,20 @@ local function Build()
 	return screen
 end
 
--- อ่านค่าและเริ่มประมวลผลระบบคีย์
-local savedKey = loadVerifiedKey()
-local keyToCheck = savedKey or getgenv().SCRIPT_KEY
+-- หน่วงเวลา 0.2 วินาที เพื่อรอให้ Executor เขียนค่า _G.Script_Language ลง Memory ให้เรียบร้อย
+task.delay(0.2, function()
+    local savedKey = loadVerifiedKey()
+    local keyToCheck = savedKey or getgenv().SCRIPT_KEY
 
-if keyToCheck then
-    local result = API.check_key(keyToCheck)
-    if result and result.valid then
-        getgenv().SCRIPT_KEY = keyToCheck
-        RunMainScript()
-        return
+    if keyToCheck then
+        local result = API.check_key(keyToCheck)
+        if result and result.valid then
+            getgenv().SCRIPT_KEY = keyToCheck
+            RunMainScript()
+            return
+        end
     end
-end
 
-Build()
+    Build()
+end)
 
