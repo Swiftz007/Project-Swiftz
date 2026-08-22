@@ -1,4 +1,4 @@
--- 🔥🔥🔥🔥8
+-- 🔥🔥🔥🔥9
 
 local HttpService = game:GetService("HttpService")
 local TweenService = game:GetService("TweenService")
@@ -78,12 +78,10 @@ local function RunMainScript()
     if game.PlaceId == TARGET_PLACE_ID then
         -- แมพเฉพาะ Violence District
         if currentLang == "Thai" then
-            print("[REAPER HUB] Loading: Violence District (Thai)")
             pcall(function()
                 loadstring(game:HttpGet("https://raw.githubusercontent.com/x2sxqz/Violence-District/refs/heads/main/thai.lua"))()
             end)
         else
-            print("[REAPER HUB] Loading: Violence District (English)")
             pcall(function()
                 loadstring(game:HttpGet("https://raw.githubusercontent.com/x2sxqz/Violence-District/refs/heads/main/eng.lua"))()
             end)
@@ -91,12 +89,10 @@ local function RunMainScript()
     else
         -- แมพทั่วไป
         if currentLang == "Thai" then
-            print("[REAPER HUB] Loading: Normal Script (Thai)")
             pcall(function()
                 loadstring(game:HttpGet("https://raw.githubusercontent.com/x2sxqz/Normal/refs/heads/main/Thaixyz.lua"))()
             end)
         else
-            print("[REAPER HUB] Loading: Normal Script (English)")
             pcall(function()
                 loadstring(game:HttpGet("https://raw.githubusercontent.com/x2sxqz/Normal/refs/heads/main/kingxyz.lua"))()
             end)
