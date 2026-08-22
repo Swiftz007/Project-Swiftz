@@ -1,6 +1,4 @@
--- 🔥🔥🔥🔥4
-
--- REAPER Hub Key System - Final Environment Fix
+-- 🔥🔥🔥🔥5
 
 local HttpService = game:GetService("HttpService")
 local TweenService = game:GetService("TweenService")
@@ -43,15 +41,7 @@ local function SafeHttpRequest(requestData)
     return nil
 end
 
--- ฟังก์ชันเช็กภาษาที่ดึงค่าจากสภาวะแวดล้อมจริงของ Executor อย่างแม่นยำ
-local function IsThaiLanguage()
-    local lang = _G.Script_Language or (getgenv and getgenv().Script_Language)
-    if type(lang) == "string" then
-        return string.lower(string.gsub(lang, "%s+", "")) == "thai"
-    end
-    return false
-end
-
+-- เช็กภาษาและ Place ID
 local function RunMainScript()
     task.spawn(function()
         pcall(function()
@@ -59,24 +49,39 @@ local function RunMainScript()
         end)
     end)
 
-    local isThai = IsThaiLanguage()
+    -- เช็กเฉพาะ _G.Script_Language
+    local isThai = (_G.Script_Language == "Thai")
 
     if game.PlaceId == TARGET_PLACE_ID then
-        pcall(function()
-            if isThai then
+
+        -- Place ID ตรง
+        if isThai then
+            -- Thai
+            pcall(function()
                 loadstring(game:HttpGet("https://raw.githubusercontent.com/x2sxqz/Violence-District/refs/heads/main/thai.lua"))()
-            else
+            end)
+        else
+            -- English
+            pcall(function()
                 loadstring(game:HttpGet("https://raw.githubusercontent.com/x2sxqz/Violence-District/refs/heads/main/eng.lua"))()
-            end
-        end)
+            end)
+        end
+
     else
-        pcall(function()
-            if isThai then
+
+        -- Place ID ไม่ตรง
+        if isThai then
+            -- Thai
+            pcall(function()
                 loadstring(game:HttpGet("https://raw.githubusercontent.com/x2sxqz/Normal/refs/heads/main/Thaixyz.lua"))()
-            else
+            end)
+        else
+            -- English
+            pcall(function()
                 loadstring(game:HttpGet("https://raw.githubusercontent.com/x2sxqz/Normal/refs/heads/main/kingxyz.lua"))()
-            end
-        end)
+            end)
+        end
+
     end
 end
 
