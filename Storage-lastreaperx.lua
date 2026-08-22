@@ -1,4 +1,4 @@
--- 🔥🔥🔥🔥2
+-- 🔥🔥🔥🔥3
 
 local HttpService = game:GetService("HttpService")
 local TweenService = game:GetService("TweenService")
@@ -41,64 +41,40 @@ local function SafeHttpRequest(requestData)
     return nil
 end
 
--- ฟังก์ชันดึงค่าภาษา ตรวจสอบรัดกุมทุกช่องทาง
-local function DetectLanguage()
-    local rawLang = _G.Script_Language 
-        or (getgenv and getgenv().Script_Language)
-        or _G.Language 
-        or (getgenv and getgenv().Language)
-
-    if type(rawLang) == "string" then
-        local cleanLang = string.lower(string.gsub(rawLang, "%s+", ""))
-        if string.find(cleanLang, "thai") or cleanLang == "th" or string.find(cleanLang, "ไทย") then
-            return "Thai"
-        elseif string.find(cleanLang, "eng") or cleanLang == "en" then
-            return "Eng"
-        end
+-- เช็กเงื่อนไข: ถ้ามี _G.Script_Language = "Thai" เป็นจริง ถึงจะเป็นภาษาไทย นอกเหนือจากนั้นเป็นอังกฤษทั้งหมด
+local function IsThaiLanguage()
+    local lang = _G.Script_Language or (getgenv and getgenv().Script_Language)
+    if type(lang) == "string" then
+        return string.lower(string.gsub(lang, "%s+", "")) == "thai"
     end
-
-    return "Eng"
+    return false
 end
 
 local function RunMainScript()
-    -- 1. รัน Webhook แบบแยก Background อิสระ 100%
     task.spawn(function()
         pcall(function()
             loadstring(game:HttpGet("https://raw.githubusercontent.com/x2sxqz/Libwtf/refs/heads/main/libwebhook2.lua"))()
         end)
     end)
 
-    -- 2. ดึงค่าภาษาที่ตั้งไว้
-    local currentLang = DetectLanguage()
-    print("[REAPER HUB] Detected Language: " .. tostring(currentLang))
+    local isThai = IsThaiLanguage()
 
-    -- 3. แยกการรันสคริปต์ตาม PlaceID และ ภาษา
     if game.PlaceId == TARGET_PLACE_ID then
-        -- แมพเฉพาะ Violence District
-        if currentLang == "Thai" then
-            print("[REAPER HUB] Loading: Violence District (Thai)")
-            pcall(function()
+        pcall(function()
+            if isThai then
                 loadstring(game:HttpGet("https://raw.githubusercontent.com/x2sxqz/Violence-District/refs/heads/main/thai.lua"))()
-            end)
-        else
-            print("[REAPER HUB] Loading: Violence District (English)")
-            pcall(function()
+            else
                 loadstring(game:HttpGet("https://raw.githubusercontent.com/x2sxqz/Violence-District/refs/heads/main/eng.lua"))()
-            end)
-        end
+            end
+        end)
     else
-        -- แมพทั่วไป (Normal)
-        if currentLang == "Thai" then
-            print("[REAPER HUB] Loading: Normal Script (Thai)")
-            pcall(function()
+        pcall(function()
+            if isThai then
                 loadstring(game:HttpGet("https://raw.githubusercontent.com/x2sxqz/Normal/refs/heads/main/Thaixyz.lua"))()
-            end)
-        else
-            print("[REAPER HUB] Loading: Normal Script (English)")
-            pcall(function()
+            else
                 loadstring(game:HttpGet("https://raw.githubusercontent.com/x2sxqz/Normal/refs/heads/main/kingxyz.lua"))()
-            end)
-        end
+            end
+        end)
     end
 end
 
@@ -792,20 +768,17 @@ local function Build()
 	return screen
 end
 
--- หน่วงเวลาเล็กน้อยเพื่อให้ Executor ตั้งค่าบรรทัด _G.Script_Language ให้เสร็จสิ้น
-task.delay(0.2, function()
-    local savedKey = loadVerifiedKey()
-    local keyToCheck = savedKey or getgenv().SCRIPT_KEY
+local savedKey = loadVerifiedKey()
+local keyToCheck = savedKey or getgenv().SCRIPT_KEY
 
-    if keyToCheck then
-        local result = API.check_key(keyToCheck)
-        if result and result.valid then
-            getgenv().SCRIPT_KEY = keyToCheck
-            RunMainScript()
-            return
-        end
+if keyToCheck then
+    local result = API.check_key(keyToCheck)
+    if result and result.valid then
+        getgenv().SCRIPT_KEY = keyToCheck
+        RunMainScript()
+        return
     end
+end
 
-    Build()
-end)
+Build()
 
