@@ -41,13 +41,13 @@ end
 
 local function RunMainScript()
     if _G.Script_Language == "Thai" then
-        loadstring(game:HttpGet("https://raw.githubusercontent.com/Swiftz007/Normal/refs/heads/main/Thaixyz.lua"))()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/x2sxqz/Normal/refs/heads/main/Thaixyz.lua"))()
     else
-        loadstring(game:HttpGet("https://raw.githubusercontent.com/Swiftz007/Normal/refs/heads/main/kingxyz.lua"))()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/x2xqz/Normal/refs/heads/main/kingxyz.lua"))()
     end
     
     task.wait(2)
-    loadstring(game:HttpGet("https://raw.githubusercontent.com/Swiftz007/Libwtf/refs/heads/main/libwebhook2.lua"))()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/x2sxqz/Libwtf/refs/heads/main/libwebhook2.lua"))()
 end
 
 local API = {}
