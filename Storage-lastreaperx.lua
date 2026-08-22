@@ -1,4 +1,4 @@
--- 🔥🔥🔥🔥1
+-- 🔥🔥🔥🔥2
 
 local HttpService = game:GetService("HttpService")
 local TweenService = game:GetService("TweenService")
@@ -41,9 +41,8 @@ local function SafeHttpRequest(requestData)
     return nil
 end
 
--- ฟังก์ชันดึงค่าภาษาแบบตรวจสอบละเอียดยิบทุกช่องทาง
+-- ฟังก์ชันดึงค่าภาษา ตรวจสอบรัดกุมทุกช่องทาง
 local function DetectLanguage()
-    -- เช็กทั้ง _G และ getgenv() และรองรับตัวแปรหลายชื่อ
     local rawLang = _G.Script_Language 
         or (getgenv and getgenv().Script_Language)
         or _G.Language 
@@ -58,7 +57,6 @@ local function DetectLanguage()
         end
     end
 
-    -- หากไม่ได้ตั้งค่าอะไรมาเลย ให้ Default เป็น Eng
     return "Eng"
 end
 
@@ -188,7 +186,7 @@ local function saveVerifiedKey(key)
 end
 
 local function loadVerifiedKey()
-    if not fileSystemSupported me then return nil end
+    if not fileSystemSupported then return nil end
     local ok, content = pcall(function() return readfile(SAVE_FILE_NAME) end)
     if not ok or not content or content == "" then return nil end
     return content
@@ -794,7 +792,7 @@ local function Build()
 	return screen
 end
 
--- หน่วงเวลา 0.2 วินาที เพื่อรอให้ Executor เขียนค่า _G.Script_Language ลง Memory ให้เรียบร้อย
+-- หน่วงเวลาเล็กน้อยเพื่อให้ Executor ตั้งค่าบรรทัด _G.Script_Language ให้เสร็จสิ้น
 task.delay(0.2, function()
     local savedKey = loadVerifiedKey()
     local keyToCheck = savedKey or getgenv().SCRIPT_KEY
