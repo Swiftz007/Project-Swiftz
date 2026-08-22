@@ -1,4 +1,4 @@
--- 🔥🔥🔥🔥6
+-- 🔥🔥🔥🔥7
 
 local HttpService = game:GetService("HttpService")
 local TweenService = game:GetService("TweenService")
@@ -41,7 +41,7 @@ local function SafeHttpRequest(requestData)
     return nil
 end
 
--- เช็กภาษาและ Place ID
+-- เช็ก Place ID และภาษา
 local function RunMainScript()
     task.spawn(function()
         pcall(function()
@@ -49,43 +49,29 @@ local function RunMainScript()
         end)
     end)
 
-    -- อ่านค่าจาก _G
-    local language = nil
-
-    pcall(function()
-        language = _G.Script_Language
-    end)
-
-    local isThai = (language == "Thai")
-
+    -- Place ID ตรง → eng.lua ทันที ไม่เช็กภาษา
     if game.PlaceId == TARGET_PLACE_ID then
 
-        if isThai then
-            -- Thai + Place ID ตรง
-            pcall(function()
-                loadstring(game:HttpGet("https://raw.githubusercontent.com/x2sxqz/Violence-District/refs/heads/main/thai.lua"))()
-            end)
-        else
-            -- English + Place ID ตรง
-            pcall(function()
-                loadstring(game:HttpGet("https://raw.githubusercontent.com/x2sxqz/Violence-District/refs/heads/main/eng.lua"))()
-            end)
-        end
+        pcall(function()
+            loadstring(game:HttpGet("https://raw.githubusercontent.com/x2sxqz/Violence-District/refs/heads/main/eng.lua"))()
+        end)
 
     else
 
-        if isThai then
-            -- Thai + Place ID ไม่ตรง
+        -- Place ID ไม่ตรง → ค่อยเช็กภาษา
+        if _G.Script_Language == "Thai" then
+
             pcall(function()
                 loadstring(game:HttpGet("https://raw.githubusercontent.com/x2sxqz/Normal/refs/heads/main/Thaixyz.lua"))()
             end)
+
         else
-            -- English + Place ID ไม่ตรง
+
             pcall(function()
                 loadstring(game:HttpGet("https://raw.githubusercontent.com/x2sxqz/Normal/refs/heads/main/kingxyz.lua"))()
             end)
-        end
 
+        end
     end
 end
 
