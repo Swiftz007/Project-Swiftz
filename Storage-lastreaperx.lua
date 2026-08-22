@@ -1,4 +1,6 @@
--- 🔥🔥🔥🔥3
+-- 🔥🔥🔥🔥4
+
+-- REAPER Hub Key System - Final Environment Fix
 
 local HttpService = game:GetService("HttpService")
 local TweenService = game:GetService("TweenService")
@@ -41,7 +43,7 @@ local function SafeHttpRequest(requestData)
     return nil
 end
 
--- เช็กเงื่อนไข: ถ้ามี _G.Script_Language = "Thai" เป็นจริง ถึงจะเป็นภาษาไทย นอกเหนือจากนั้นเป็นอังกฤษทั้งหมด
+-- ฟังก์ชันเช็กภาษาที่ดึงค่าจากสภาวะแวดล้อมจริงของ Executor อย่างแม่นยำ
 local function IsThaiLanguage()
     local lang = _G.Script_Language or (getgenv and getgenv().Script_Language)
     if type(lang) == "string" then
