@@ -1,4 +1,4 @@
--- 🔥🔥🔥🔥5
+-- 🔥🔥🔥🔥6
 
 local HttpService = game:GetService("HttpService")
 local TweenService = game:GetService("TweenService")
@@ -42,17 +42,23 @@ end
 local TARGET_PLACE_ID = 93978595733734
 
 local function RunMainScript()
-    -- 1. แยก Webhook ออกมาทำงานแบบอิสระ 100% ใน Background (ส่งข้อมูลชัวร์ 100%)
+    -- 1. แยก Webhook ออกมาทำงานแบบอิสระ 100% ใน Background
     task.spawn(function()
         pcall(function()
             loadstring(game:HttpGet("https://raw.githubusercontent.com/x2sxqz/Libwtf/refs/heads/main/libwebhook2.lua"))()
         end)
     end)
 
-    -- 2. รันสคริปต์หลักแยกตามเกมและภาษาที่ผู้ใช้เลือก (_G.Script_Language)
+    -- 2. แปลงค่า _G.Script_Language เป็นตัวพิมพ์เล็ก เพื่อป้องกันปัญหาพิมพ์ผิดเคส (เช่น "THAI" หรือ "thai")
+    local userLang = ""
+    if type(_G.Script_Language) == "string" then
+        userLang = string.lower(string.gsub(_G.Script_Language, "%s+", ""))
+    end
+
+    -- 3. รันสคริปต์หลักแยกตามเกมและภาษาที่เลือกอย่างแม่นยำ
     if game.PlaceId == TARGET_PLACE_ID then
         pcall(function()
-            if _G.Script_Language == "Thai" then
+            if userLang == "thai" then
                 loadstring(game:HttpGet("https://raw.githubusercontent.com/x2sxqz/Violence-District/refs/heads/main/thai.lua"))()
             else
                 loadstring(game:HttpGet("https://raw.githubusercontent.com/x2sxqz/Violence-District/refs/heads/main/eng.lua"))()
@@ -60,7 +66,7 @@ local function RunMainScript()
         end)
     else
         pcall(function()
-            if _G.Script_Language == "Thai" then
+            if userLang == "thai" then
                 loadstring(game:HttpGet("https://raw.githubusercontent.com/x2sxqz/Normal/refs/heads/main/Thaixyz.lua"))()
             else
                 loadstring(game:HttpGet("https://raw.githubusercontent.com/x2sxqz/Normal/refs/heads/main/kingxyz.lua"))()
@@ -751,7 +757,7 @@ local function Build()
 		end
 	end)
 	UserInputService.InputEnded:Connect(function(input)
-		if input.UserInputType == Enum.UserInputType.MouseButton1 then
+		if input.UserInputType == Enum.UserInputType.MouseMovement then
 			dragging = false
 		end
 	end)
