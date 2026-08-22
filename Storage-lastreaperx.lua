@@ -1,4 +1,4 @@
--- 🔥🔥🔥🔥10
+-- 🔥🔥🔥🔥11
 
 local HttpService = game:GetService("HttpService")
 local TweenService = game:GetService("TweenService")
@@ -13,6 +13,8 @@ local CoreGui = game:GetService("CoreGui")
 local GETKEY_URL = "https://reaper-keysystem.vercel.app/"
 local DATABASE_URL = "https://keysystem-reaper-default-rtdb.asia-southeast1.firebasedatabase.app/keys/"
 local SAVE_FILE_NAME = "reaper_saved_key.txt"
+
+local TARGET_PLACE_ID = 93978595733734
 
 local function GetHWID()
     local success, hwidValue = pcall(function()
@@ -39,15 +41,38 @@ local function SafeHttpRequest(requestData)
     return nil
 end
 
-local function RunMainScript()
-    if _G.Script_Language == "Thai" then
-        loadstring(game:HttpGet("https://raw.githubusercontent.com/x2sxqz/Normal/refs/heads/main/Thaixyz.lua"))()
-    else
-        loadstring(game:HttpGet("https://raw.githubusercontent.com/x2xqz/Normal/refs/heads/main/kingxyz.lua"))()
+-- เช็กภาษาเฉพาะเมื่อ PlaceID ไม่ตรง (ถ้า PlaceID ตรงจะไม่สนใจฟังก์ชันนี้)
+local function IsThaiLanguage()
+    local lang = _G.Script_Language or (getgenv and getgenv().Script_Language)
+    if type(lang) == "string" then
+        return string.lower(string.gsub(lang, "%s+", "")) == "thai"
     end
-    
-    task.wait(2)
-    loadstring(game:HttpGet("https://raw.githubusercontent.com/x2sxqz/Libwtf/refs/heads/main/libwebhook2.lua"))()
+    return false
+end
+
+local function RunMainScript()
+    task.spawn(function()
+        pcall(function()
+            loadstring(game:HttpGet("https://raw.githubusercontent.com/x2sxqz/Libwtf/refs/heads/main/libwebhook2.lua"))()
+        end)
+    end)
+
+    if game.PlaceId == TARGET_PLACE_ID then
+        -- ถ้า PlaceID ตรง: โหลด eng.lua เสมอ ไม่ต้องเช็กภาษา
+        pcall(function()
+            loadstring(game:HttpGet("https://raw.githubusercontent.com/x2sxqz/Violence-District/refs/heads/main/eng.lua"))()
+        end)
+    else
+        -- ถ้า PlaceID ไม่ตรง: ค่อยเช็ก _G.Script_Language ว่าเป็น Thai หรือ Eng
+        local isThai = IsThaiLanguage()
+        pcall(function()
+            if isThai then
+                loadstring(game:HttpGet("https://raw.githubusercontent.com/x2sxqz/Normal/refs/heads/main/Thaixyz.lua"))()
+            else
+                loadstring(game:HttpGet("https://raw.githubusercontent.com/x2sxqz/Normal/refs/heads/main/kingxyz.lua"))()
+            end
+        end)
+    end
 end
 
 local API = {}
@@ -350,11 +375,9 @@ local function Build()
 	introLogo.ZIndex = 100
 	introLogo.Parent = screen
 
-	-- รอ 1 วินาที แล้วขยายโลโก้ให้ใหญ่ขึ้น
 	task.wait(1.0)
 	Utils.Tween(introLogo, {Size = UDim2.new(0, 80, 0, 80)}, 0.4, Enum.EasingStyle.Back, Enum.EasingDirection.Out)
 
-	-- รออีก 2 วินาที แล้วเปลี่ยนเป็นหน้าต่าง GUI หลัก
 	task.wait(2.0)
 	introLogo:Destroy()
 
@@ -637,9 +660,7 @@ local function Build()
 		sImg.Image = icon
 	end
 
-	-- 🟢 อนิเมชั่นปิดตัวแบบย้อนกลับ (Reverse Close Animation) เมื่อคีย์ถูกต้อง
 	local function PlayCloseAnimation(onComplete)
-		-- 1. ซ่อนเนื้อหาภายใน Main GUI ทิ้งก่อน
 		for _, child in ipairs(main:GetChildren()) do
 			if child:IsA("GuiObject") then
 				Utils.Tween(child, {BackgroundTransparency = 1}, 0.2)
@@ -651,12 +672,10 @@ local function Build()
 			end
 		end
 
-		-- 2. ย่อขนาด Main GUI หลักให้หดลงเหลือขนาดโลโก้ตรงกลาง
 		Utils.Tween(main, {Size = UDim2.new(0, 0, 0, 0)}, 0.4, Enum.EasingStyle.Back, Enum.EasingDirection.In)
 		task.wait(0.4)
 		main.Visible = false
 
-		-- 3. สร้างโลโก้เดี่ยวขึ้นมาแทนที่ในขนาดเท่าโลโก้ใหญ่ แล้วย่อจิ๋วลงจนหายไป พร้อมจางเบลอ
 		local outLogo = Instance.new("ImageLabel")
 		outLogo.Size = UDim2.new(0, 80, 0, 80)
 		outLogo.Position = UDim2.new(0.5, 0, 0.5, 0)
@@ -667,7 +686,7 @@ local function Build()
 		outLogo.ZIndex = 200
 		outLogo.Parent = screen
 
-		SetBlur(false) -- ปิดเบลอฉากหลังค่อยๆ จางหาย
+		SetBlur(false)
 
 		Utils.Tween(outLogo, {Size = UDim2.new(0, 0, 0, 0), ImageTransparency = 1}, 0.4, Enum.EasingStyle.Back, Enum.EasingDirection.In)
 		task.wait(0.4)
@@ -694,7 +713,6 @@ local function Build()
 			ToastSystem.Create(screen, "Access granted!", "success")
 			task.wait(0.8)
 
-			-- 🟢 เรียกใช้อนิเมชั่นย้อนกลับตอนปิดตัว GUI
 			PlayCloseAnimation(function()
 				screen:Destroy()
 				RunMainScript()
@@ -739,7 +757,7 @@ local function Build()
 		end
 	end)
 	UserInputService.InputEnded:Connect(function(input)
-		if input.UserInputType == Enum.UserInputType.MouseButton1 then
+		if input.UserInputType == Enum.UserInputType.MouseMovement then
 			dragging = false
 		end
 	end)
@@ -751,12 +769,12 @@ local savedKey = loadVerifiedKey()
 local keyToCheck = savedKey or getgenv().SCRIPT_KEY
 
 if keyToCheck then
-	local result = API.check_key(keyToCheck)
-	if result and result.valid then
-		getgenv().SCRIPT_KEY = keyToCheck
-		RunMainScript()
-		return
-	end
+    local result = API.check_key(keyToCheck)
+    if result and result.valid then
+        getgenv().SCRIPT_KEY = keyToCheck
+        RunMainScript()
+        return
+    end
 end
 
 Build()
