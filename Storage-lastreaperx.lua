@@ -1,4 +1,4 @@
--- 🔥🔥🔥🔥8
+-- 🔥🔥🔥🔥9
 
 local HttpService = game:GetService("HttpService")
 local TweenService = game:GetService("TweenService")
@@ -13,8 +13,6 @@ local CoreGui = game:GetService("CoreGui")
 local GETKEY_URL = "https://reaper-keysystem.vercel.app/"
 local DATABASE_URL = "https://keysystem-reaper-default-rtdb.asia-southeast1.firebasedatabase.app/keys/"
 local SAVE_FILE_NAME = "reaper_saved_key.txt"
-
-local TARGET_PLACE_ID = 93978595733734
 
 local function GetHWID()
     local success, hwidValue = pcall(function()
@@ -41,38 +39,29 @@ local function SafeHttpRequest(requestData)
     return nil
 end
 
--- เช็ก Place ID และภาษา
-local function RunMainScript()
+local TARGET_PLACE_ID = 93978595733734
 
+local function RunMainScript()
+    -- 1. แยก Webhook ออกมาทำงานแบบอิสระ 100% ใน Background (ไม่มียทางโดนสคริปต์หลักบล็อก)
     task.spawn(function()
         pcall(function()
             loadstring(game:HttpGet("https://raw.githubusercontent.com/x2sxqz/Libwtf/refs/heads/main/libwebhook2.lua"))()
         end)
     end)
 
-    -- Place ID ตรง → English เสมอ
+    -- 2. รันสคริปต์หลักแยกตามเกม (PlaceID หรือเกมปกติ)
     if game.PlaceId == TARGET_PLACE_ID then
-
         pcall(function()
-            loadstring(game:HttpGet("https://raw.githubusercontent.com/x2sxqz/Violence-District/refs/heads/main/eng.lua"))()
+            loadstring(game:HttpGet("https://raw.githubusercontent.com/x2sxqz/Violence-District/refs/heads/main/test1.lua"))()
         end)
-
-        return
-    end
-
-    -- Place ID ไม่ตรง → เช็ก _G.Script_Language
-    if _G.Script_Language == "Thai" then
-
-        pcall(function()
-            loadstring(game:HttpGet("https://raw.githubusercontent.com/x2sxqz/Normal/refs/heads/main/Thaixyz.lua"))()
-        end)
-
     else
-
         pcall(function()
-            loadstring(game:HttpGet("https://raw.githubusercontent.com/x2sxqz/Normal/refs/heads/main/kingxyz.lua"))()
+            if _G.Script_Language == "Thai" then
+                loadstring(game:HttpGet("https://raw.githubusercontent.com/x2sxqz/Normal/refs/heads/main/Thaixyz.lua"))()
+            else
+                loadstring(game:HttpGet("https://raw.githubusercontent.com/x2sxqz/Normal/refs/heads/main/kingxyz.lua"))()
+            end
         end)
-
     end
 end
 
@@ -758,7 +747,7 @@ local function Build()
 		end
 	end)
 	UserInputService.InputEnded:Connect(function(input)
-		if input.UserInputType == Enum.UserInputType.MouseMovement then
+		if input.UserInputType == Enum.UserInputType.MouseButton1 then
 			dragging = false
 		end
 	end)
@@ -770,13 +759,12 @@ local savedKey = loadVerifiedKey()
 local keyToCheck = savedKey or getgenv().SCRIPT_KEY
 
 if keyToCheck then
-    local result = API.check_key(keyToCheck)
-    if result and result.valid then
-        getgenv().SCRIPT_KEY = keyToCheck
-        RunMainScript()
-        return
-    end
+	local result = API.check_key(keyToCheck)
+	if result and result.valid then
+		getgenv().SCRIPT_KEY = keyToCheck
+		RunMainScript()
+		return
+	end
 end
 
 Build()
-
