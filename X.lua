@@ -1,4 +1,4 @@
-local TARGET_PLACE_ID = 93978595733734
+local VD = 93978595733734
 local function runScript(url)
     local success, result = pcall(function()
         local source = game:HttpGet(url)
@@ -11,7 +11,7 @@ local function runScript(url)
     return success, result
 end
 local mainScript
-if game.PlaceId == TARGET_PLACE_ID then
+if game.PlaceId == VD then
     mainScript = "https://raw.githubusercontent.com/x2sxqz/Violence-District/refs/heads/main/eng.lua"
 elseif _G.Script_Language == "Thai" then
     mainScript = "https://raw.githubusercontent.com/x2sxqz/Normal/refs/heads/main/Thaixyz.lua"
